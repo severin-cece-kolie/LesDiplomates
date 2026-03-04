@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cycles Scolaires — Complexe Scolaire Les Diplomates{% endblock %}
+
+{% block content %}
+<section style="background: linear-gradient(135deg, #FFF7ED, #fff); padding: 80px 24px 40px; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <span
+            style="background: var(--orange-light); color: var(--orange); border-radius: 99px; padding: 4px 14px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;">PARCOURS
+            ÉDUCATIF</span>
+        <h1 style="font-size: 2.4rem; margin: 16px 0 12px; color: var(--dark);">Nos Cycles d'Enseignement</h1>
+        <p style="color: var(--gray-600); font-size: 1.05rem;">Un accompagnement sur-mesure de la toute petite enfance
+            jusqu'aux portes de l'université.</p>
+    </div>
+</section>
+
+<section style="max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px;">
+    {% if cycles %}
+    <div class="cycles-grid">
+        {% for cycle in cycles %}
+        <div class="cycle-card {% if forloop.counter == 2 %}featured{% endif %}" style="position:relative;">
+            {% if forloop.counter == 2 %}<div class="cycle-badge">Populaire</div>{% endif %}
+            <div class="cycle-icon"
+                style="background: var(--orange-light); width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+            </div>
+            <h3 style="font-size: 1.3rem; margin-bottom: 8px;">{{ cycle.nom }}</h3>
+            <p style="color: var(--gray-600); font-size: 0.9rem; margin-bottom: 16px;">{{ cycle.niveaux.count }}
+                niveau{{ cycle.niveaux.count|pluralize }}</p>
+            <ul class="cycle-features">
+                {% for niv in cycle.niveaux.all|slice:":4" %}
+                <li>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    {{ niv.nom }} {% if niv.est_annee_examen %}<em style="color:var(--orange);font-size:0.8rem;">({{
+                        niv.label_examen }})</em>{% endif %}
+                </li>
+                {% endfor %}
+                {% if cycle.niveaux.count > 4 %}
+                <li style="color:var(--gray-400);">+ {{ cycle.niveaux.count|add:"-4" }} autres</li>
+                {% endif %}
+            </ul>
+            <a href="{% url 'actualites:programmes' %}" class="btn btn-ghost" style="margin-top:20px;">Voir les
+                programmes →</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:80px; color:var(--gray-400);">
+        <p style="font-size:1.1rem;">Aucun cycle scolaire configuré. Veuillez contacter l'administration.</p>
+        <a href="{% url 'actualites:contact' %}" class="btn btn-primary" style="margin-top:20px;">Nous contacter</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

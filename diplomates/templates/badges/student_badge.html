@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Badge - {{ eleve.nom_complet }}{% endblock %}
+{% block extra_css %}
+<style>
+    body { font-family: 'Lexend', sans-serif; }
+    .badge-shadow { box-shadow: 0 25px 50px -12px rgba(0,0,0,.25); }
+    @media print {
+        .no-print { display:none!important; }
+        body { background:white!important; padding:0!important; }
+        .badge-main-container { margin:0!important; border:none!important; }
+        .left-panel { -webkit-print-color-adjust:exact; print-color-adjust:exact; background-color:#ec7f13!important; }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<main style="display:flex;flex-direction:column;align-items:center;padding:40px 20px;min-height:100vh;background:#f8fafc;">
+
+    <!-- Breadcrumb -->
+    <div class="no-print" style="width:100%;max-width:860px;margin-bottom:24px;display:flex;align-items:center;gap:8px;font-size:0.85rem;">
+        <a href="{% url 'eleves:liste' %}" style="color:#ec7f13;font-weight:600;">Élèves</a>
+        <span style="color:#94a3b8;">›</span>
+        <a href="{% url 'eleves:detail' id=eleve.id %}" style="color:#ec7f13;font-weight:600;">{{ eleve.nom_complet }}</a>
+        <span style="color:#94a3b8;">›</span>
+        <span style="color:#334155;font-weight:600;">Badge Officiel</span>
+    </div>
+
+    <!-- Badge Card -->
+    <div class="badge-main-container" style="width:100%;max-width:860px;background:white;border-radius:20px;overflow:hidden;display:flex;flex-direction:row;min-height:440px;box-shadow:0 25px 50px -12px rgba(0,0,0,.25);">
+
+        <!-- LEFT: Photo -->
+        <div class="left-panel" style="width:38%;background:#ec7f13;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px;overflow:hidden;">
+            <!-- Grid pattern -->
+            <div style="position:absolute;inset:0;opacity:0.12;pointer-events:none;">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/></pattern></defs>
+                    <rect width="100%" height="100%" fill="url(#grid)"/>
+                </svg>
+            </div>
+
+            <!-- School logo badge top -->
+            <div style="position:absolute;top:20px;left:0;right:0;text-align:center;z-index:10;">
+                <span style="color:rgba(255,255,255,0.8);font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;">Complexe Scolaire</span><br>
+                <span style="color:white;font-size:0.85rem;font-weight:800;letter-spacing:0.05em;">LES DIPLOMATES</span>
+            </div>
+
+            <!-- Student Photo -->
+            <div style="position:relative;z-index:10;width:200px;height:240px;border-radius:16px;overflow:hidden;border:4px solid rgba(255,255,255,0.4);box-shadow:0 8px 32px rgba(0,0,0,0.25);background:rgba(255,255,255,0.15);">
+                {% if eleve.photo %}<img src="{{ eleve.photo.url }}" alt="{{ eleve.nom_complet }}" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+                {% else %}<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);"><span style="color:white;font-size:4rem;font-weight:900;text-transform:uppercase;">{{ eleve.prenom.0 }}{{ eleve.nom.0 }}</span></div>{% endif %}
+            </div>
+
+            <!-- Status pill -->
+            <div style="margin-top:18px;z-index:10;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);padding:5px 18px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);">
+                <span style="color:white;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;">{% if eleve.statut == 'ACTIF' %}Élève Officiel{% elif eleve.statut == 'INACTIF' %}Inactif{% else %}Renvoyé{% endif %}</span>
+            </div>
+        </div>
+
+        <!-- RIGHT: Info -->
+        <div style="flex:1;padding:40px 44px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+                <!-- School header -->
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;">
+                    <div>
+                        <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:2px;">Complexe Scolaire Les Diplomates</p>
+                        <p style="color:#ec7f13;font-weight:700;font-size:1rem;">Excellence &amp; Leadership</p>
+                    </div>
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="#ec7f13"><path d="M12 1l3.09 6.26L22 8.27l-5 4.87 1.18 6.88L12 16.9l-6.18 3.12L7 13.14 2 8.27l6.91-1.01L12 1z"/></svg>
+                </div>
+
+                <!-- Student Info -->
+                <div style="margin-bottom:28px;">
+                    <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Nom Complet</p>
+                    <p style="font-size:1.9rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;line-height:1.1;">{{ eleve.nom_complet }}</p>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div>
+                        <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Matricule</p>
+                        <p style="font-size:1.05rem;font-weight:800;color:#0f172a;font-family:monospace;">{{ eleve.matricule }}</p>
+                    </div>
+                    <div>
+                        <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Année Académique</p>
+                        <p style="font-size:1.05rem;font-weight:800;color:#0f172a;">{% if eleve.classe %}{{ eleve.classe.annee_scolaire }}{% else %}—{% endif %}</p>
+                    </div>
+                    <div>
+                        <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Cycle</p>
+                        <p style="font-size:1.05rem;font-weight:800;color:#0f172a;">{% if eleve.classe %}{% if eleve.classe.niveau_scolaire %}{{ eleve.classe.niveau_scolaire.cycle.nom }}{% else %}—{% endif %}{% else %}—{% endif %}</p>
+                    </div>
+                    <div>
+                        <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Classe Actuelle</p>
+                        <p style="font-size:1.05rem;font-weight:800;color:#0f172a;">{% if eleve.classe %}{{ eleve.classe.nom }}{% else %}—{% endif %}</p>
+                    </div>
+                    <div>
+                        <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Date de Naissance</p>
+                        <p style="font-size:1rem;font-weight:700;color:#0f172a;">{{ eleve.date_naissance|date:"d/m/Y" }}</p>
+                    </div>
+                    <div>
+                        <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Statut</p>
+                        <p style="font-size:1rem;font-weight:700;color:{% if eleve.statut == 'ACTIF' %}#16a34a{% else %}#dc2626{% endif %};">{% if eleve.statut == 'ACTIF' %}Actif ✓{% else %}{{ eleve.statut }}{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer: Signature + QR -->
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:20px;margin-top:20px;">
+                <div>
+                    <p style="color:#94a3b8;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;">Signature du Registre Numérique</p>
+                    <p style="font-size:1.2rem;font-weight:800;color:#ec7f13;font-style:italic;">Les Diplomates</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="text-align:right;">
+                        <p style="font-size:0.6rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">Scanner pour valider</p>
+                        <p style="font-size:0.7rem;color:#cbd5e1;font-family:monospace;">{{ eleve.matricule }}</p>
+                    </div>
+                    <!-- QR Code SVG -->
+                    <div style="width:70px;height:70px;padding:4px;background:white;border:1px solid #e2e8f0;border-radius:8px;">
+                        {% if eleve.qr_code %}<img src="{{ eleve.qr_code.url }}" style="width:100%;height:100%;">
+                        {% else %}
+                        <svg viewBox="0 0 60 60" fill="none" width="100%" height="100%">
+                            <rect width="60" height="60" fill="white"/>
+                            <path d="M5 5h10v10H5zM5 45h10v10H5zM45 5h10v10H45z" fill="#0f172a"/>
+                            <path d="M8 8h4v4H8zM8 48h4v4H8zM48 8h4v4H48z" fill="white"/>
+                            <path d="M20 5h5v5h-5zM25 10h5v5h-5zM30 5h5v5h-5zM35 10h5v5h-5zM40 5h5v5h-5zM20 20h5v5h-5zM30 20h5v5h-5zM40 20h5v5h-5zM5 20h5v5H5zM15 20h5v5h-5zM5 30h5v5H5zM20 30h5v5h-5zM30 30h5v5h-5zM45 25h5v5h-5zM45 35h5v5h-5z" fill="#ec7f13"/>
+                            <path d="M20 45h5v5h-5zM30 45h5v5h-5zM25 50h5v5h-5zM35 45h5v5h-5zM40 50h5v5h-5zM30 55h5v5h-5z" fill="#0f172a"/>
+                        </svg>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="no-print" style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+        <button onclick="window.print()" style="display:flex;align-items:center;gap:8px;background:#ec7f13;color:white;padding:12px 24px;border-radius:10px;font-weight:700;border:none;cursor:pointer;font-size:0.9rem;box-shadow:0 4px 12px rgba(236,127,19,.3);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger / Imprimer
+        </button>
+        <a href="{% url 'eleves:renouveler_qr' id=eleve.id %}" style="display:flex;align-items:center;gap:8px;background:white;color:#334155;padding:12px 24px;border-radius:10px;font-weight:700;border:1px solid #e2e8f0;text-decoration:none;font-size:0.9rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Renouveler QR Code
+        </a>
+        <a href="{% url 'eleves:detail' id=eleve.id %}" style="display:flex;align-items:center;gap:8px;background:white;color:#334155;padding:12px 24px;border-radius:10px;font-weight:700;border:1px solid #e2e8f0;text-decoration:none;font-size:0.9rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Retour au Profil
+        </a>
+    </div>
+
+    <!-- Info footer -->
+    <div class="no-print" style="margin-top:32px;width:100%;max-width:860px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);">
+            <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Date d'Émission</p>
+            <p style="color:#334155;font-weight:600;font-size:0.9rem;">{{ eleve.date_inscription|date:"d F Y" }}</p>
+        </div>
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);">
+            <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Année Scolaire</p>
+            <p style="color:#334155;font-weight:600;font-size:0.9rem;">{% if eleve.classe %}{{ eleve.classe.annee_scolaire }}{% else %}—{% endif %}</p>
+        </div>
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);">
+            <p style="color:#94a3b8;font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Localisation</p>
+            <p style="color:#334155;font-weight:600;font-size:0.9rem;">Conakry, Guinée</p>
+        </div>
+    </div>
+</main>
+<script>
+function shareCredentials() {
+    if (navigator.share) { navigator.share({title:'Badge - {{ eleve.nom_complet }}',url:window.location.href}); }
+    else { navigator.clipboard.writeText(window.location.href); alert('Lien copié !'); }
+}
+</script>
+{% endblock %}

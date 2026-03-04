@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Portail Parent — Complexe Scolaire Les Diplomates{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+
+<div class="admin-wrapper">
+
+    <!-- SIDEBAR PARENT -->
+    {% include 'includes/sidebar_parent.html' %}
+
+    <!-- MAIN CONTENT -->
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div class="topbar-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" placeholder="Rechercher...">
+            </div>
+
+            <div class="topbar-actions">
+                <button class="icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    <span class="notif-badge">2</span>
+                </button>
+
+                <div class="topbar-user">
+                    <div class="user-info">
+                        <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+                        <span class="user-role">PARENT</span>
+                    </div>
+                    <div class="avatar-sm">
+                        {{ user.username.0|upper }}
+                    </div>
+                    <a href="{% url 'accounts:logout' %}" class="btn-danger-small">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16,17 21,12 16,7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <div class="dashboard-welcome"
+                style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <h1>Bonjour, {{ user.first_name|default:user.username }}</h1>
+                    {% if selected_enfant %}
+                    <p>Suivi des performances académiques de <strong class="text-orange">{{ selected_enfant.nom_complet
+                            }}</strong></p>
+                    {% else %}
+                    <p>Bienvenue sur votre espace parent.</p>
+                    {% endif %}
+                </div>
+
+                {% if enfants.count > 1 %}
+                <div class="child-selector"
+                    style="background: white; padding: 10px 15px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <label style="font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 4px;">Changer
+                        d'enfant :</label>
+                    <div style="display: flex; gap: 8px;">
+                        {% for enfant in enfants %}
+                        <a href="?enfant={{ enfant.id }}"
+                            class="btn {% if selected_enfant.id == enfant.id %}btn-primary{% else %}btn-outline{% endif %}"
+                            style="padding: 6px 12px; font-size: 0.85rem;">
+                            {{ enfant.prenom }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if selected_enfant %}
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <p class="kpi-label">Moyenne Générale</p>
+                    <h2 class="kpi-value">{{ moyenne_generale }} <span class="kpi-unit">/ 20</span></h2>
+                    <p class="kpi-meta">Classe : {{ selected_enfant.classe.nom }}</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Cycle & Niveau</p>
+                    <h2 class="kpi-value" style="font-size: 1.5rem; white-space: nowrap;">{{
+                        selected_enfant.classe.niveau_scolaire.nom }}</h2>
+                    <p class="kpi-meta">{{ selected_enfant.classe.niveau_scolaire.cycle.nom }}</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Statut Inscription</p>
+                    <h2 class="kpi-value orange" style="font-size: 1.5rem;">{{ selected_enfant.get_statut_display }}
+                    </h2>
+                    <p class="kpi-meta">Matricule: {{ selected_enfant.matricule }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state"
+                style="padding: 60px; text-align: center; background: white; border-radius: 16px; margin-top: 20px;">
+                <div class="feature-icon orange-bg text-white" style="margin: 0 auto 20px;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </div>
+                <h3>Aucun enfant trouvé</h3>
+                <p>Veuillez contacter l'administration pour lier vos enfants à votre compte.</p>
+            </div>
+            {% endif %}
+
+            <!-- PERFORMANCE + QUICK PAY -->
+            <div class="parent-dashboard-grid">
+                {% if selected_enfant %}
+                <!-- Performance -->
+                <div class="performance-card">
+                    <div class="perf-header">
+                        <h3>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316"
+                                stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                <polyline points="17 6 23 6 23 12" />
+                            </svg>
+                            Evaluations Récentes
+                        </h3>
+                        <a href="{% url 'notes:bulletin' eleve_id=selected_enfant.id trimestre_id=notes_recentes.0.trimestre.id|default:trimestres.0.0|default:1 %}"
+                            class="view-all-link orange">Voir Bulletins</a>
+                    </div>
+                    <div class="subject-list">
+                        {% for n in notes_recentes %}
+                        <div class="subject-item">
+                            <div class="subject-icon orange-bg text-white">{{ n.matiere.nom.0|upper }}</div>
+                            <div class="subject-info">
+                                <strong>{{ n.matiere.nom }}</strong>
+                                <small>{{ n.trimestre.nom }} • {{ n.date_saisie|date:"d M." }}</small>
+                            </div>
+                            <div class="subject-grade">
+                                <span class="grade">{{ n.valeur }}/20</span>
+                                <span
+                                    class="grade-label {% if n.valeur >= 15 %}excellent{% elif n.valeur >= 10 %}good{% else %}urgent{% endif %}">
+                                    {{ n.appreciation|default:"ENREGISTRÉ" }}
+                                </span>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-gray" style="padding: 20px; text-align: center;">Aucune note enregistrée pour le
+                            moment.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Quick Pay -->
+                <div class="quick-pay-card">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        Paiement Rapide
+                    </h3>
+                    <p>Réglez votre solde restant instantanément via Mobile Money.</p>
+                    <div class="payment-options">
+                        {% if solde_total > 0 %}
+                        <div class="solde-display text-center py-4">
+                            <h4 class="text-2xl font-bold">{{ solde_total }} GNF</h4>
+                            <p class="text-sm text-gray">Solde Impayé Total</p>
+                        </div>
+                        <a href="{% url 'finance:checkout' %}" class="payment-option orange-money">
+                            <span class="payment-badge orange">ORANGE</span>
+                            <div>
+                                <strong>Orange Money</strong>
+                                <small>Payer tout ou partie</small>
+                            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </a>
+                        <a href="{% url 'finance:checkout' %}" class="payment-option mtn-momo">
+                            <span class="payment-badge mtn">MTN</span>
+                            <div>
+                                <strong>MTN MoMo</strong>
+                                <small>Payer tout ou partie</small>
+                            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <div class="text-center py-8">
+                            <div class="feature-icon green-bg text-white mx-auto mb-2" style="width:40px;height:40px">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            </div>
+                            <strong>Compte à jour</strong>
+                            <p class="text-sm text-gray">Aucun impayé détecté.</p>
+                        </div>
+                        {% endif %}
+                        <a href="{% url 'finance:transactions' %}" class="payment-option-other">Voir historique des
+                            paiements</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANNOUNCEMENTS + EVENT -->
+            <div class="parent-dashboard-grid">
+                <div class="announcements-card">
+                    <h3>Messages & Annonces</h3>
+                    {% for ann in annonces %}
+                    <div class="announcement-item">
+                        <div class="ann-icon {% if ann.type_notification == 'PAIEMENT_RAPPEL' %}urgent{% endif %}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="{% if ann.type_notification == 'PAIEMENT_RAPPEL' %}#ef4444{% else %}#F97316{% endif %}"
+                                stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                            </svg>
+                        </div>
+                        <div>
+                            <strong>{{ ann.titre }}</strong>
+                            <p>{{ ann.message|truncatewords:15 }}</p>
+                            <small>{{ ann.date_envoi|date:"d/m/Y H:i" }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray" style="padding: 20px; text-align: center;">Aucun nouveau message.</p>
+                    {% endfor %}
+                </div>
+
+                <div class="event-highlight-card orange-bg">
+                    <div style="padding:8px 0 16px;">
+                        <span
+                            style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;opacity:0.75;text-transform:uppercase;">Actualités</span>
+                    </div>
+                    {% if annonces %}
+                    {% with annonces.0 as last_notif %}
+                    <div class="event-content">
+                        <h3>{{ last_notif.titre|default:"Notification Récente" }}</h3>
+                        <p>{{ last_notif.message|truncatewords:12 }}</p>
+                        <small style="opacity:0.75;">{{ last_notif.date_envoi|date:"d/m/Y" }}</small>
+                    </div>
+                    {% endwith %}
+                    {% else %}
+                    <div class="event-content">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)"
+                            stroke-width="1.5" style="margin-bottom:12px;">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                        </svg>
+                        <h3>Aucune annonce</h3>
+                        <p>Vous serez notifié des prochains événements ici.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

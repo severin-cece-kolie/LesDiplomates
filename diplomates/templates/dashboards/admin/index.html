@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tableau de Bord Admin — Les Diplomates{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+
+<div class="admin-wrapper">
+
+    <!-- ADMIN SIDEBAR -->
+    {% include 'includes/sidebar_admin.html' %}
+
+    <!-- ADMIN MAIN CONTENT -->
+    <div class="admin-main">
+
+        <!-- TOP BAR -->
+        {% block topbar %}
+        {% include 'includes/topbar_admin.html' %}
+        {% endblock %}
+
+        <div class="admin-content">
+            <!-- HERO WELCOME -->
+            <div class="dashboard-welcome">
+                <h1>Excellence Académique &amp; Transparence</h1>
+                <p>Bienvenue, {{ user.get_full_name|default:user.username }}. Tableau de bord — <strong>{{ mois_actuel
+                        }}</strong></p>
+            </div>
+
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <p class="kpi-label">Recettes ce Mois (Validées)</p>
+                    <h2 class="kpi-value orange">GNF {{ recettes_mois|floatformat:0 }}</h2>
+                    <span class="kpi-trend positive">↗ {{ mois_actuel }}</span>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Soldes Impayés</p>
+                    <h2 class="kpi-value orange">GNF {{ total_impaye|floatformat:0 }}</h2>
+                    {% if nb_eleves_retard > 0 %}
+                    <span class="kpi-alert">⚠ {{ nb_eleves_retard }} élève{{ nb_eleves_retard|pluralize }} en
+                        retard</span>
+                    {% else %}
+                    <span class="kpi-trend positive">✓ Aucun retard</span>
+                    {% endif %}
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Taux de Recouvrement</p>
+                    <h2 class="kpi-value orange">{{ taux_recouvrement }}%</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:{{ taux_recouvrement }}%"></div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Élèves Inscrits</p>
+                    <h2 class="kpi-value orange">{{ total_eleves }}</h2>
+                    <span class="kpi-meta">{{ total_parents }} parent{{ total_parents|pluralize }} enregistré{{
+                        total_parents|pluralize }}</span>
+                </div>
+            </div>
+
+            <!-- CHARTS + QUICK ACTIONS -->
+            <div class="dashboard-grid">
+                <!-- Payment Method Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Répartition des Paiements Validés</h3>
+                    </div>
+                    <div class="chart-placeholder">
+                        {% if methode_stats %}
+                        <div class="bar-chart">
+                            {% for m in methode_stats %}
+                            <div class="bar-group">
+                                <div class="bar" style="height:{{ m.pct }}%"><span>{{ m.pct }}%</span></div>
+                                <label>{{ m.methode }}</label>
+                                <small>{{ m.count }} trans.</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div style="padding:40px;text-align:center;color:var(--gray-400);">
+                            <span class="material-symbols-outlined"
+                                style="font-size:48px;display:block;margin-bottom:8px;">bar_chart</span>
+                            Aucune transaction validée
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <aside class="quick-actions-panel">
+                    <h3>Actions Rapides</h3>
+                    <a href="{% url 'finance:paiement_manuel' %}" class="quick-action-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <line x1="2" y1="10" x2="22" y2="10" />
+                        </svg>
+                        Enregistrer un Paiement Manuel
+                    </a>
+                    <a href="{% url 'eleves:liste' %}" class="quick-action-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        Gérer les Élèves ({{ total_eleves }})
+                    </a>
+                    <a href="{% url 'finance:transactions' %}" class="quick-action-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Voir Toutes les Transactions
+                    </a>
+                    <a href="{% url 'eleves:nouveau' %}" class="quick-action-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="16" />
+                            <line x1="8" y1="12" x2="16" y2="12" />
+                        </svg>
+                        Nouvel Élève
+                    </a>
+
+                    <!-- Activity Log -->
+                    <div class="activity-log">
+                        <h4>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            Dernières Activités
+                        </h4>
+                        {% for act in activites %}
+                        <div class="activity-item {% if act.statut == 'VALIDE' %}active{% endif %}">
+                            <span class="act-dot {% if act.statut == 'VALIDE' %}orange{% else %}gray{% endif %}"></span>
+                            <div>
+                                <p>{{ act.eleve.nom_complet }} — {{ act.montant|floatformat:0 }} GNF ({{
+                                    act.get_methode_display }})</p>
+                                <small>{{ act.created_at|date:"d/m/Y H:i" }} — {{ act.get_statut_display }}</small>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p style="color:var(--gray-400);font-size:0.85rem;padding:8px 0;">Aucune activité récente.</p>
+                        {% endfor %}
+                    </div>
+                </aside>
+            </div>
+
+            <!-- RECENT TRANSACTIONS TABLE -->
+            <div class="transactions-table">
+                <div class="table-header">
+                    <h3>Transactions Récentes</h3>
+                    <a href="{% url 'finance:transactions' %}" class="view-all-link">Voir tout</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DATE</th>
+                            <th>NOM DE L'ÉLÈVE</th>
+                            <th>MÉTHODE</th>
+                            <th>MONTANT</th>
+                            <th>STATUT</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in recent_transactions %}
+                        <tr>
+                            <td>{{ t.created_at|date:"d M. Y" }}</td>
+                            <td><a href="{% url 'eleves:detail' id=t.eleve.id %}"
+                                    style="color:var(--orange);font-weight:600;">{{ t.eleve.nom_complet }}</a></td>
+                            <td>{{ t.get_methode_display }}</td>
+                            <td>{{ t.montant|floatformat:0 }} GNF</td>
+                            <td>
+                                {% if t.statut == 'VALIDE' %}
+                                <span class="status-badge-validated">VALIDÉ</span>
+                                {% elif t.statut == 'ATTENTE' %}
+                                <span class="status-badge-pending">EN ATTENTE</span>
+                                {% else %}
+                                <span class="status-badge-rejected">REJETÉ</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if t.statut == 'ATTENTE' %}
+                                <a href="{% url 'finance:valider' id=t.id %}" class="btn btn-primary"
+                                    style="padding:4px 12px;font-size:0.8rem;">Valider</a>
+                                {% else %}
+                                <a href="{% url 'finance:transactions' %}" class="btn btn-outline"
+                                    style="padding:4px 12px;font-size:0.8rem;">Détail</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:40px;color:var(--gray-400);">Aucune
+                                transaction enregistrée.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

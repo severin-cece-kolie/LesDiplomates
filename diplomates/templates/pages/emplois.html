@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Recrutement & Carrières — Complexe Scolaire Les Diplomates{% endblock %}
+
+{% block content %}
+<section class="page-header-standard">
+    <div class="container">
+        <div class="header-badge">CARRIÈRES</div>
+        <h1>Rejoignez l'Elite de l'Enseignement</h1>
+        <p>Nous recherchons des passionnés pour former la prochaine génération de leaders guinéens.</p>
+    </div>
+</section>
+
+<section class="container py-16">
+    <div class="grid grid-3-1 gap-12">
+        <div class="jobs-list">
+            <h2 class="text-2xl font-bold mb-8">Postes Ouverts</h2>
+
+            <div class="card mb-6 p-6 hover-shadow border-l-4 border-orange">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-xs font-bold text-orange uppercase tracking-wider">Pédagogie</span>
+                        <h3 class="text-xl">Professeur de Mathématiques (Lycée)</h3>
+                    </div>
+                    <span class="badge-pill bg-green-100 text-green-700">Temps plein</span>
+                </div>
+                <p class="text-gray mb-4">Expérience confirmée dans le programme guinéen (Terminale SM/SE). Maîtrise des
+                    outils numériques souhaitée.</p>
+                <div class="flex gap-4">
+                    <a href="{% url 'actualites:contact' %}" class="btn btn-primary btn-sm">Postuler maintenant</a>
+                    <button class="btn btn-ghost btn-sm">Détails du poste</button>
+                </div>
+            </div>
+
+            <div class="card mb-6 p-6 hover-shadow border-l-4 border-slate-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Administration</span>
+                        <h3 class="text-xl">Surveillant Général Adjoint</h3>
+                    </div>
+                    <span class="badge-pill bg-green-100 text-green-700">Temps plein</span>
+                </div>
+                <p class="text-gray mb-4">Gestion de la discipline et suivi des effectifs. Rigueur et sens de l'écoute
+                    indispensables.</p>
+                <div class="flex gap-4">
+                    <a href="{% url 'actualites:contact' %}" class="btn btn-primary btn-sm">Postuler maintenant</a>
+                    <button class="btn btn-ghost btn-sm">Détails du poste</button>
+                </div>
+            </div>
+
+            <div class="card mb-6 p-6 hover-shadow border-l-4 border-blue-400">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-xs font-bold text-blue-500 uppercase tracking-wider">STEM</span>
+                        <h3 class="text-xl">Animateur Laboratoire Robotique</h3>
+                    </div>
+                    <span class="badge-pill bg-blue-100 text-blue-700">CDD / Vacataire</span>
+                </div>
+                <p class="text-gray mb-4">Animation d'ateliers pour le primaire et le collège. Passion pour Arduino,
+                    Python et LEGO Education.</p>
+                <div class="flex gap-4">
+                    <a href="{% url 'actualites:contact' %}" class="btn btn-primary btn-sm">Postuler maintenant</a>
+                    <button class="btn btn-ghost btn-sm">Détails du poste</button>
+                </div>
+            </div>
+
+            <div class="empty-state bg-slate-50 border-dashed border-2 p-10 text-center rounded-2xl mt-12">
+                <h4>Spontanéité & Talent ?</h4>
+                <p>Votre profil ne correspond pas aux postes ci-dessus ? Envoyez-nous votre candidature spontanée.</p>
+                <a href="{% url 'actualites:contact' %}" class="btn btn-outline mt-4">Envoyer mon CV</a>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="card p-6 bg-slate-900 text-white">
+                <h3 class="text-white">Pourquoi nous rejoindre ?</h3>
+                <ul class="list-unstyled mt-6 space-y-4">
+                    <li class="flex gap-3">
+                        <span class="material-symbols-outlined text-orange">trending_up</span>
+                        <span>Environnement de travail premium</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="material-symbols-outlined text-orange">school</span>
+                        <span>Formation continue offerte</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="material-symbols-outlined text-orange">payments</span>
+                        <span>Rémunération compétitive</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="material-symbols-outlined text-orange">laptop_mac</span>
+                        <span>Équipements de pointe</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card p-6 border-orange mt-8 text-center">
+                <div class="brand-logo mx-auto mb-4">
+                    <rect width="28" height="28" rx="8" fill="#F97316" />
+                </div>
+                <p class="text-sm">"Chez Les Diplomates, nous ne recrutons pas seulement des employés, nous accueillons
+                    des bâtisseurs d'avenir."</p>
+                <strong class="block mt-4 text-xs uppercase tracking-tighter">La Direction Générale</strong>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,383 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription — Les Diplomates</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .register-page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .register-left {
+            background: var(--orange);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-left::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, .08);
+            border-radius: 50%;
+        }
+
+        .register-left::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -80px;
+            width: 350px;
+            height: 350px;
+            background: rgba(0, 0, 0, .06);
+            border-radius: 50%;
+        }
+
+        .register-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 56px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .register-brand-icon {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .register-brand span {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .register-hero {
+            position: relative;
+            z-index: 1;
+        }
+
+        .register-hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .register-hero p {
+            color: rgba(255, 255, 255, .8);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .register-right {
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+
+        .register-form-wrapper {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .register-form-wrapper h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+
+        .register-form-wrapper>p {
+            color: var(--gray-600);
+            margin-bottom: 36px;
+        }
+
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: .87rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 14px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: .95rem;
+            outline: none;
+            transition: border-color .2s;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--orange);
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .role-btn {
+            padding: 8px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            text-align: center;
+            transition: all .2s;
+            background: white;
+        }
+
+        .role-btn.active {
+            border-color: var(--orange);
+            background: var(--orange-light);
+            color: var(--orange);
+        }
+
+        .register-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: .85rem;
+            color: var(--gray-400);
+        }
+
+        .messages-list {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: .87rem;
+            margin-bottom: 8px;
+        }
+
+        .alert-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        @media (max-width: 768px) {
+            .register-page {
+                grid-template-columns: 1fr;
+            }
+
+            .register-left {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-page">
+        <!-- LEFT -->
+        <div class="register-left">
+            <div class="register-brand">
+                <div class="register-brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+                        <path d="M14 6L20 10V14C20 17.3 17.4 20.4 14 21C10.6 20.4 8 17.3 8 14V10L14 6Z"
+                            fill="#F97316" />
+                    </svg>
+                </div>
+                <span>Les Diplomates</span>
+            </div>
+            <div class="register-hero">
+                <h1>Rejoignez<br>l'Excellence</h1>
+                <p>Inscrivez-vous au portail du Complexe Scolaire Les Diplomates et accédez à un système de gestion
+                    éducative moderne et complet.</p>
+                <div class="login-stats">
+                    <div class="login-stat">
+                        <strong>1,250+</strong>
+                        <span>Élèves inscrits</span>
+                    </div>
+                    <div class="login-stat">
+                        <strong>98.5%</strong>
+                        <span>Réussite BEPC</span>
+                    </div>
+                    <div class="login-stat">
+                        <strong>3 cycles</strong>
+                        <span>d'enseignement</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="register-right">
+            <div class="register-form-wrapper">
+                <h2>Créer un compte 👋</h2>
+                <p>Remplissez le formulaire pour vous inscrire</p>
+
+                {% if messages %}
+                <div class="messages-list">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="POST" action="{% url 'accounts:register' %}" class="register-form">
+                    {% csrf_token %}
+
+                    <div class="role-selector" id="roleSelector">
+                        <button type="button" class="role-btn" data-role="parent">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                            </svg>
+                            Parent
+                        </button>
+                        <button type="button" class="role-btn" data-role="prof">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" />
+                            </svg>
+                            Professeur
+                        </button>
+                        <button type="button" class="role-btn" data-role="eleve">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                            Élève
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="role" id="selectedRole" value="parent" required>
+
+                    <div class="form-group">
+                        <label for="id_first_name">Prénom</label>
+                        <input type="text" id="id_first_name" name="first_name" placeholder="Votre prénom" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_last_name">Nom</label>
+                        <input type="text" id="id_last_name" name="last_name" placeholder="Votre nom" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_email">Email</label>
+                        <input type="email" id="id_email" name="email" placeholder="votre@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_username">Nom d'utilisateur</label>
+                        <input type="text" id="id_username" name="username"
+                            placeholder="Choisissez un nom d'utilisateur" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_telephone">Téléphone</label>
+                        <input type="tel" id="id_telephone" name="telephone" placeholder="+224 624 00 00 00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password1">Mot de passe</label>
+                        <input type="password" id="id_password1" name="password1"
+                            placeholder="Choisissez un mot de passe" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password2">Confirmer le mot de passe</label>
+                        <input type="password" id="id_password2" name="password2"
+                            placeholder="Confirmez votre mot de passe" required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="terms" required> J'accepte les <a href="#"
+                                style="color: var(--orange);">conditions d'utilisation</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full btn-large">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="8.5" cy="7" r="4" />
+                            <line x1="20" y1="8" x2="20" y2="14" />
+                            <line x1="23" y1="11" x2="17" y2="11" />
+                        </svg>
+                        S'inscrire
+                    </button>
+                </form>
+
+                <div class="register-footer">
+                    <p>Déjà un compte ? <a href="{% url 'accounts:login' %}"
+                            style="color:var(--orange); font-weight:600;">Se connecter</a></p>
+                    <p style="margin-top:16px;font-size:.75rem;">© 2024 Complexe Scolaire Les Diplomates</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('selectedRole').value = btn.dataset.role;
+            });
+        });
+
+        // Sélectionner le rôle parent par défaut
+        document.querySelector('[data-role="parent"]').classList.add('active');
+    </script>
+</body>
+
+</html>

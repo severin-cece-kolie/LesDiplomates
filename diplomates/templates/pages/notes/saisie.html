@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load notes_extras %}
+{% block title %}Saisie Notes — {{ classe }} — Les Diplomates{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+    {% include 'includes/sidebar_admin.html' %}
+    <div class="admin-main">
+        {% include 'includes/topbar_admin.html' %}
+        <div class="admin-content">
+
+            <nav class="breadcrumb">
+                <a href="{% url 'actualites:home' %}">Accueil</a>
+                <span>/</span>
+                <a href="{% url 'notes_classes' %}">Classes</a>
+                <span>/</span>
+                <span>Saisie Notes</span>
+            </nav>
+
+            <div class="page-section-header">
+                <h1>Saisie des Notes : {{ classe.nom }}</h1>
+                <div class="header-actions">
+                    <a href="{% url 'notes:liste_classes' %}" class="btn btn-outline">← Retour</a>
+                </div>
+            </div>
+
+            <!-- FILTRES MATIÈRE + TRIMESTRE -->
+            <div class="filter-bar">
+                <form method="GET" class="filter-form">
+                    <div class="form-group-inline">
+                        <label>Matière</label>
+                        <select name="matiere" class="form-select" onchange="this.form.submit()">
+                            <option value="">Choisir une matière...</option>
+                            {% for m in matieres %}
+                            <option value="{{ m.pk }}" {% if matiere and matiere.pk==m.pk %}selected{% endif %}>
+                                {{ m.nom }} (coef. {{ m.coefficient }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group-inline">
+                        <label>Trimestre</label>
+                        <select name="trimestre" class="form-select" onchange="this.form.submit()">
+                            {% for val, label in trimestres %}
+                            <option value="{{ val }}" {% if trimestre==val %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            {% if matiere %}
+            <!-- KPIs -->
+            <div class="kpi-grid" style="margin-bottom:24px">
+                <div class="kpi-card">
+                    <p class="kpi-label">Moyenne de la Classe</p>
+                    <h2 class="kpi-value">{{ moyenne_classe|default:"—" }}<span class="kpi-unit">/20</span></h2>
+                    {% if moyenne_classe %}
+                    <span class="kpi-trend positive">↗ +1.2 pts</span>
+                    {% endif %}
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Notes en Attente</p>
+                    <h2 class="kpi-value orange">{{ nb_en_attente }}</h2>
+                    <p class="kpi-meta">élèves restants</p>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Note la Plus Haute</p>
+                    {% if note_max_obj %}
+                    <h2 class="kpi-value">{{ note_max_obj.valeur }}<span class="kpi-unit">/20</span></h2>
+                    <p class="kpi-meta">{{ note_max_obj.eleve.nom_complet }}</p>
+                    {% else %}
+                    <h2 class="kpi-value">—</h2>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- TABLE SAISIE -->
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <h3>{{ classe.nom }} — {{ matiere.nom }}</h3>
+                        <small class="text-muted">{{ classe.salle }} · Semestre {{ trimestre }}</small>
+                    </div>
+                    <div class="progress-inline">
+                        <div class="progress-bar" style="width:160px">
+                            <div class="progress-fill"
+                                style="width:{% widthratio notes_existantes.items|length eleves.count 100 %}%"></div>
+                        </div>
+                        <span class="text-muted" style="font-size:.82rem">{{ notes_existantes.items|length }}/{{
+                            eleves.count }} saisies</span>
+                    </div>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>ÉLÈVE</th>
+                                <th>MATRICULE</th>
+                                <th>NOTE (/20)</th>
+                                <th>COMMENTAIRE</th>
+                                <th>STATUT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for eleve in eleves %}
+                            {% with note=notes_existantes|get_item:eleve.pk %}
+                            <tr>
+                                <td>
+                                    <div class="eleve-cell">
+                                        <div class="avatar-initials">{{ eleve.prenom.0 }}{{ eleve.nom.0 }}</div>
+                                        {{ eleve.nom_complet }}
+                                    </div>
+                                </td>
+                                <td class="text-muted">{{ eleve.matricule }}</td>
+                                <td>
+                                    <input type="number" name="note_{{ eleve.pk }}" value="{{ note.valeur|default:'' }}"
+                                        min="0" max="20" step="0.5"
+                                        class="grade-input {% if note and note.valeur == 0 %}grade-zero{% endif %}"
+                                        placeholder="—">
+                                </td>
+                                <td>
+                                    <input type="text" name="commentaire_{{ eleve.pk }}"
+                                        value="{{ note.commentaire|default:'' }}" class="comment-input"
+                                        placeholder="Ajouter un commentaire...">
+                                </td>
+                                <td>
+                                    {% if note %}
+                                    {% if note.est_publie %}
+                                    <span class="badge-status published">● Publié</span>
+                                    {% else %}
+                                    <span class="badge-status saved">● Sauvegardé</span>
+                                    {% endif %}
+                                    {% else %}
+                                    <span class="badge-status pending">● En attente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="table-actions-bar">
+                        <p class="text-muted">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F97316"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            Les modifications non sauvegardées sont conservées en brouillon.
+                        </p>
+                        <div class="action-btns">
+                            <button type="submit" name="action" value="sauvegarder" class="btn btn-outline">
+                                Sauvegarder Brouillons
+                            </button>
+                            <button type="submit" name="action" value="publier" class="btn btn-primary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Publier les Notes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {% else %}
+            <div class="empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                </svg>
+                <h3>Sélectionnez une matière</h3>
+                <p>Choisissez une matière et un trimestre pour commencer la saisie des notes.</p>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

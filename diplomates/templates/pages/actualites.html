@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Actualités & Événements — Complexe Scolaire Les Diplomates{% endblock %}
+{% block nav_actualites %}active{% endblock %}
+
+{% block content %}
+
+<div class="page-wrapper">
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="page-header-inner">
+            <p class="page-tag">
+                <span class="tag-line"></span>
+                VIE SCOLAIRE
+            </p>
+            <h1>Actualités & Événements</h1>
+            <p class="page-description">Suivez l'excellence au quotidien. Restez informé des dernières avancées
+                académiques et des moments forts de notre communauté.</p>
+        </div>
+    </section>
+
+    <!-- TABS -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab active" data-tab="all">Tout l'actualité</button>
+            <button class="tab" data-tab="officiel">Annonces Officielles</button>
+            <button class="tab" data-tab="projets">Projets Académiques</button>
+            <button class="tab" data-tab="sport">Sport & Culture</button>
+            <button class="tab" data-tab="vie">Vie Étudiante</button>
+        </div>
+    </div>
+
+    <!-- NEWS GRID + SIDEBAR -->
+    <div class="news-layout">
+        <div class="news-main">
+
+            <!-- ARTICLES GRID -->
+            <div class="articles-grid">
+                {% for item in news %}
+                <article class="article-card">
+                    <div class="article-img">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                        {% else %}
+                        <div
+                            style="width:100%; height:100%; background:#f1f5f9; display:flex; align-items:center; justify-center">
+                            <span class="material-symbols-outlined text-4xl text-slate-300">newspaper</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="article-body">
+                        <div class="article-date">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            {{ item.date_pub|date:"d F Y" }}
+                        </div>
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.excerpt }}</p>
+                        <a href="#" class="article-link">Lire la suite →</a>
+                    </div>
+                </article>
+                {% empty %}
+                <div class="col-span-2 text-center py-12">
+                    <p class="text-muted">Aucune actualité publiée pour le moment.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- CALENDAR -->
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <div>
+                        <h2>Calendrier Académique</h2>
+                        <p class="calendar-month">Novembre 2024</p>
+                    </div>
+                    <div class="calendar-nav">
+                        <button class="cal-nav-btn" id="prevMonth">‹</button>
+                        <button class="cal-nav-btn" id="nextMonth">›</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="cal-header">LUN</div>
+                    <div class="cal-header">MAR</div>
+                    <div class="cal-header">MER</div>
+                    <div class="cal-header">JEU</div>
+                    <div class="cal-header">VEN</div>
+                    <div class="cal-header">SAM</div>
+                    <div class="cal-header">DIM</div>
+
+                    <!-- Empty days -->
+                    <div class="cal-day empty"></div>
+                    <div class="cal-day empty"></div>
+                    <div class="cal-day empty"></div>
+                    <div class="cal-day empty"></div>
+                    <div class="cal-day">1</div>
+                    <div class="cal-day has-event reunion">2<span class="event-dot"></span><small>Réunion
+                            Parents</small></div>
+                    <div class="cal-day">3</div>
+                    <!-- Week 2 -->
+                    <div class="cal-day">4</div>
+                    <div class="cal-day">5</div>
+                    <div class="cal-day">6</div>
+                    <div class="cal-day has-event activite">7<span class="event-dot"></span><small>Atelier Art</small>
+                    </div>
+                    <div class="cal-day">8</div>
+                    <div class="cal-day">9</div>
+                    <div class="cal-day">10</div>
+                    <!-- Week 3 -->
+                    <div class="cal-day today">11<span class="event-dot examen"></span><small>EXAMEN SEM. 1</small>
+                    </div>
+                    <div class="cal-day">12</div>
+                    <div class="cal-day">13</div>
+                    <div class="cal-day">14</div>
+                    <div class="cal-day">15</div>
+                    <div class="cal-day">16</div>
+                    <div class="cal-day">17</div>
+                </div>
+
+                <div class="calendar-legend">
+                    <span class="legend-item"><span class="legend-dot examen"></span>Examens</span>
+                    <span class="legend-item"><span class="legend-dot reunion"></span>Réunions</span>
+                    <span class="legend-item"><span class="legend-dot activite"></span>Activités</span>
+                    <span class="legend-item"><span class="legend-dot vacance"></span>Vacances</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="news-sidebar">
+            <!-- Planning PDF -->
+            <div class="sidebar-card orange-card">
+                <h3>Planning Complet</h3>
+                <p>Téléchargez le calendrier complet de l'année scolaire 2024-2025 en format PDF pour votre
+                    organisation.</p>
+                <a href="#" class="btn btn-white-outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Télécharger le PDF
+                </a>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="sidebar-card">
+                <h3>Événements à venir</h3>
+                <div class="event-list">
+                    <div class="event-item">
+                        <div class="event-date-badge">
+                            <span class="event-month">NOV</span>
+                            <span class="event-day">20</span>
+                        </div>
+                        <div class="event-info">
+                            <strong>Sortie Pédagogique</strong>
+                            <p>Musée National de Conakry</p>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date-badge">
+                            <span class="event-month">DÉC</span>
+                            <span class="event-day">15</span>
+                        </div>
+                        <div class="event-info">
+                            <strong>Fête de Fin d'Année</strong>
+                            <p>Campus Principal · 16:00</p>
+                        </div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date-badge">
+                            <span class="event-month">JAN</span>
+                            <span class="event-day">05</span>
+                        </div>
+                        <div class="event-info">
+                            <strong>Rentrée Trimestre 2</strong>
+                            <p>Reprise des cours à 08:00</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="view-all-link">Voir tous les événements</a>
+            </div>
+
+            <!-- Alert Admin -->
+            <div class="sidebar-card alert-card">
+                <div class="alert-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    <strong>Alerte Administrative</strong>
+                </div>
+                <p>Les inscriptions pour les examens blancs du BACCALAURÉAT session 2025 sont désormais ouvertes sur le
+                    portail parent.</p>
+            </div>
+        </aside>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+</script>
+{% endblock %}

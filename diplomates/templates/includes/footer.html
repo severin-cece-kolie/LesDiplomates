@@ -1,0 +1,86 @@
+{% load static %}
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <div class="brand-logo">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <rect width="28" height="28" rx="8" fill="#F97316" />
+                        <path d="M14 6L20 10V14C20 17.3 17.4 20.4 14 21C10.6 20.4 8 17.3 8 14V10L14 6Z" fill="white" />
+                    </svg>
+                </div>
+                <span>Les Diplomates</span>
+            </div>
+            <p class="footer-tagline">Le futur de l'éducation en Guinée commence ici. Excellence, Intégrité et
+                Innovation.</p>
+            <div class="footer-socials">
+                <a href="#" class="social-icon" aria-label="Facebook">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                </a>
+                <a href="#" class="social-icon" aria-label="Globe">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path
+                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                </a>
+                <a href="#" class="social-icon" aria-label="Email">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-nav">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="{% url 'actualites:home' %}">Accueil</a></li>
+                <li><a href="{% url 'actualites:programmes' %}">Cycles Scolaires</a></li>
+                <li><a href="{% url 'actualites:vie_scolaire' %}">Vie Scolaire</a></li>
+                <li><a href="{% url 'eleves:portail' %}">Portail Parents</a></li>
+                <li><a href="{% url 'eleves:portail' %}">Espace Élèves</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-nav">
+            <h4>Institution</h4>
+            <ul>
+                <li><a href="{% url 'actualites:about' %}">À propos</a></li>
+                <li><a href="{% url 'actualites:equipe' %}">Notre équipe</a></li>
+                <li><a href="{% url 'actualites:emplois' %}">Emplois</a></li>
+                <li><a href="{% url 'actualites:reglement' %}">Règlement intérieur</a></li>
+                <li><a href="{% url 'actualites:support' %}">Support</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-contact">
+            <h4>Contact</h4>
+            <p>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                </svg>
+                Quartier Camayenne, Conakry, Guinée
+            </p>
+            <p>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.27 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                +224 622 00 00 00
+            </p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2024 Complexe Scolaire Les Diplomates. Tous droits réservés.</p>
+        <div class="footer-bottom-links">
+            <a href="{% url 'actualites:privacy' %}">Confidentialité</a>
+            <a href="{% url 'actualites:terms' %}">Conditions d'utilisation</a>
+        </div>
+    </div>
+</footer>

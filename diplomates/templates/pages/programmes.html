@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nos Programmes — Complexe Scolaire Les Diplomates{% endblock %}
+
+{% block content %}
+<section style="background: linear-gradient(135deg, #FFF7ED, #fff); padding: 80px 24px 40px; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <span
+            style="background: var(--orange-light); color: var(--orange); border-radius: 99px; padding: 4px 14px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;">PROGRAMMES
+            & FILIÈRES</span>
+        <h1 style="font-size: 2.4rem; margin: 16px 0 12px; color: var(--dark);">Nos Programmes d'Enseignement</h1>
+        <p style="color: var(--gray-600); font-size: 1.05rem;">Programmes officiels du MEPU-A enrichis de modules
+            modernes par cycle et filière.</p>
+    </div>
+</section>
+
+<section style="max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px;">
+    {% for cycle in cycles %}
+    <div style="margin-bottom: 48px;">
+        <div
+            style="display:flex; align-items:center; gap:12px; margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid var(--orange-light);">
+            <div style="background:var(--orange); width:10px; height:40px; border-radius:4px;"></div>
+            <div>
+                <h2 style="font-size:1.6rem; color:var(--dark); margin:0;">{{ cycle.nom }}</h2>
+                <p style="color:var(--gray-600); margin:0; font-size:0.9rem;">{{ cycle.niveaux.count }} niveau{{
+                    cycle.niveaux.count|pluralize }}</p>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+            {% for niv in cycle.niveaux.all %}
+            <div
+                style="background: white; border-radius: 12px; padding: 20px; border: 1px solid var(--gray-200); border-left: 3px solid {% if niv.est_annee_examen %}var(--orange){% else %}var(--gray-200){% endif %}; transition: all 0.2s;">
+                <h4 style="font-size: 1rem; margin-bottom: 6px; color: var(--dark);">{{ niv.nom }}</h4>
+                {% if niv.est_annee_examen %}
+                <span
+                    style="background:var(--orange-light); color:var(--orange); font-size:0.72rem; font-weight:700; border-radius:6px; padding:2px 8px;">{{
+                    niv.label_examen }}</span>
+                {% endif %}
+                {% if niv.classes.count > 0 %}
+                <p style="color:var(--gray-400); font-size:0.8rem; margin-top:8px;">{{ niv.classes.count }} classe{{
+                    niv.classes.count|pluralize }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align:center; padding:80px; color:var(--gray-400);">
+        <p>Aucun programme disponible. Veuillez contacter l'administration.</p>
+        <a href="{% url 'actualites:contact' %}" class="btn btn-primary" style="margin-top:20px;">Nous contacter</a>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}

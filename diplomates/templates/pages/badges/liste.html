@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gestion des Badges — Les Diplomates{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+    {% include 'includes/sidebar_admin.html' %}
+    <div class="admin-main">
+        {% include 'includes/topbar_admin.html' %}
+        <div class="admin-content">
+
+            <nav class="breadcrumb">
+                <a href="#">Admin</a>
+                <span>/</span>
+                <span>Gestion des Badges</span>
+            </nav>
+
+            <div class="page-section-header">
+                <div>
+                    <h1>Gestion des Badges</h1>
+                    <p style="color:var(--gray-600)">Générez et gérez les identifications numériques pour l'année {{ annee }}.</p>
+                </div>
+                <div class="header-actions">
+                    <a href="#" class="btn btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Exporter la Liste
+                    </a>
+                    <a href="{% url 'badges:generer_tous' %}" class="btn btn-primary"
+                       onclick="return confirm('Générer les badges pour tous les élèves sans badge ?')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Générer par Lot
+                    </a>
+                </div>
+            </div>
+
+            <div class="badges-layout">
+
+                <!-- TABLE ÉLÈVES -->
+                <div class="badges-table-card">
+                    <div class="table-card-header">
+                        <h3>Registre des Élèves</h3>
+                        <span class="count-badge">{{ total }} élèves au total</span>
+                    </div>
+
+                    <!-- FILTRES -->
+                    <div class="filter-bar compact">
+                        <form method="GET" style="display:flex;gap:12px;flex-wrap:wrap">
+                            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Rechercher un élève..."
+                                   class="search-input" style="flex:1;min-width:200px">
+                            <select name="classe" class="form-select" style="width:160px">
+                                <option value="">Toutes les classes</option>
+                                {% for c in classes %}
+                                <option value="{{ c.pk }}" {% if request.GET.classe == c.pk|stringformat:"i" %}selected{% endif %}>{{ c.nom }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="statut" class="form-select" style="width:140px">
+                                <option value="">Tous statuts</option>
+                                {% for val, label in statuts %}
+                                <option value="{{ val }}" {% if request.GET.statut == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-primary" style="padding:8px 16px">Filtrer</button>
+                        </form>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>MATRICULE</th>
+                                <th>NOM COMPLET</th>
+                                <th>CLASSE</th>
+                                <th>STATUT</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for badge in badges %}
+                            <tr>
+                                <td>{{ badge.eleve.matricule }}</td>
+                                <td>
+                                    <div class="eleve-cell">
+                                        <div class="avatar-initials">{{ badge.eleve.prenom.0 }}{{ badge.eleve.nom.0 }}</div>
+                                        {{ badge.eleve.nom_complet }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="class-tag">{{ badge.eleve.classe.nom|default:"—" }}</span>
+                                </td>
+                                <td>
+                                    {% if badge.statut == 'actif' %}
+                                    <span class="badge-status saved">● Actif</span>
+                                    {% elif badge.statut == 'en_attente' %}
+                                    <span class="badge-status pending">● En attente</span>
+                                    {% else %}
+                                    <span class="badge-status" style="color:var(--gray-400)">● {{ badge.get_statut_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'badges:detail' badge.pk %}" class="action-link">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                        Générer
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" style="text-align:center;padding:40px;color:var(--gray-400)">
+                                    Aucun badge trouvé. Utilisez "Générer par Lot" pour créer les badges.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- PAGINATION -->
+                    {% if badges.has_other_pages %}
+                    <div class="pagination">
+                        {% if badges.has_previous %}
+                        <a href="?page={{ badges.previous_page_number }}" class="page-btn">‹</a>
+                        {% endif %}
+                        {% for num in badges.paginator.page_range %}
+                        <a href="?page={{ num }}" class="page-btn {% if num == badges.number %}active{% endif %}">{{ num }}</a>
+                        {% endfor %}
+                        {% if badges.has_next %}
+                        <a href="?page={{ badges.next_page_number }}" class="page-btn">›</a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- PREVIEW + STATUS -->
+                <aside class="badge-preview-panel">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Aperçu Badge
+                    </h3>
+
+                    {% if preview %}
+                    <div class="badge-mini-card">
+                        <div class="badge-mini-header">
+                            <svg width="16" height="16" viewBox="0 0 28 28" fill="none"><path d="M14 3L22 8V14C22 18.4 18.4 22 14 23C9.6 22 6 18.4 6 14V8L14 3Z" fill="white"/></svg>
+                            COMPLEXE LES DIPLOMATES
+                        </div>
+                        <div class="badge-mini-photo">
+                            {% if preview.eleve.photo %}
+                            <img src="{{ preview.eleve.photo.url }}" alt="">
+                            {% else %}
+                            <div class="avatar-lg">{{ preview.eleve.prenom.0 }}{{ preview.eleve.nom.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <strong>{{ preview.eleve.nom_complet }}</strong>
+                        <span class="badge-mini-class">{{ preview.eleve.classe.nom|default:"—"|upper }}</span>
+                        <span class="badge-mini-id">ID: {{ preview.eleve.matricule }}</span>
+                        {% if preview.qr_code %}
+                        <img src="{{ preview.qr_code.url }}" alt="QR" class="badge-mini-qr">
+                        {% else %}
+                        <div class="badge-mini-qr-placeholder"></div>
+                        {% endif %}
+                    </div>
+
+                    <div class="badge-preview-info">
+                        <div class="info-row">
+                            <span>Niveau de sécurité</span>
+                            <strong class="text-orange">{{ preview.niveau_securite }}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Expiration</span>
+                            <strong>{{ preview.date_expiration|date:"F Y"|default:"Juillet 2025" }}</strong>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <button class="btn btn-primary btn-full" style="margin-top:16px">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Confirmer & Imprimer
+                    </button>
+                    <a href="#" class="btn btn-outline btn-full" style="margin-top:8px">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        Personnaliser le Modèle
+                    </a>
+
+                    <div class="system-status">
+                        <span class="status-dot active"></span>
+                        Imprimante ID En Ligne
+                    </div>
+                </aside>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

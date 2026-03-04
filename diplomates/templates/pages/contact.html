@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact & Support — Complexe Scolaire Les Diplomates{% endblock %}
+{% block nav_contact %}active{% endblock %}
+
+{% block content %}
+
+<div class="page-wrapper contact-page">
+
+    <div class="contact-header">
+        <h1>Contact & Support</h1>
+        <p>Nous sommes là pour vous aider avec vos demandes académiques et administratives. Contactez notre équipe
+            dédiée à l'excellence.</p>
+        <nav class="breadcrumb">
+            <a href="{% url 'actualites:home' %}">Accueil</a>
+            <span>/</span>
+            <span>Contact & Support</span>
+        </nav>
+    </div>
+
+    <div class="contact-layout">
+
+        <!-- FORM SIDE -->
+        <div class="contact-form-card">
+            <div class="form-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                </svg>
+                <h2>Envoyez-nous un Message Sécurisé</h2>
+            </div>
+
+            <form method="POST" action="{% url 'actualites:contact' %}" class="contact-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="full_name">Nom Complet</label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Jean-Pierre Mansaré" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Adresse Email</label>
+                    <input type="email" id="email" name="email" placeholder="jp.mansare@example.gn" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Numéro de Téléphone</label>
+                    <div class="phone-input-wrapper">
+                        <div class="phone-prefix">
+                            <img src="{% static 'images/guinea-flag.png' %}" alt="GN" width="20"
+                                onerror="this.style.display='none'">
+                            <span>+224</span>
+                        </div>
+                        <input type="tel" id="phone" name="phone" placeholder="620 00 00 00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Sujet</label>
+                    <div class="select-wrapper">
+                        <select id="subject" name="subject">
+                            <option value="general">Demande Générale</option>
+                            <option value="inscription">Inscription</option>
+                            <option value="frais">Frais Scolaires</option>
+                            <option value="academique">Académique</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                        <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5"
+                        placeholder="Comment pouvons-nous vous aider aujourd'hui ?" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    ENVOYER LE MESSAGE
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- INFO SIDE -->
+        <div class="contact-info-side">
+            <div class="info-card">
+                <h3>Informations de Contact</h3>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                    </div>
+                    <div>
+                        <strong>Adresse du Campus</strong>
+                        <p>BP 1234, Kaloum, Conakry<br>République de Guinée</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.27 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <strong>Numéros de Téléphone</strong>
+                        <p>+224 620 11 22 33<br>+224 664 44 55 66</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <strong>Email Support</strong>
+                        <p>info@lesdiplomatesgn.edu.gn<br>support@lesdiplomatesgn.edu.gn</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAP -->
+            <div class="map-card">
+                <div class="map-placeholder">
+                    <div class="map-pin-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" fill="#F97316" />
+                        </svg>
+                        <p class="map-label">Notre Localisation à Conakry</p>
+                        <small>Cliquez pour explorer la carte interactive</small>
+                    </div>
+                </div>
+                <div class="map-footer">
+                    <span>Centre du District de Kaloum</span>
+                    <a href="https://maps.google.com/?q=Conakry,Guinea" target="_blank"
+                        class="directions-link">ITINÉRAIRE</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- FLOATING CHAT -->
+<button class="floating-chat" aria-label="Chat en direct">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+</button>
+
+{% endblock %}

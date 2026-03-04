@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Historique des Transactions — Les Diplomates{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+    {% if is_parent %}
+    {% include 'includes/sidebar_parent.html' %}
+    {% elif is_finance %}
+    {% include 'includes/sidebar_finance.html' %}
+    {% else %}
+    {% include 'includes/sidebar_admin.html' %}
+    {% endif %}
+
+    <div class="admin-main">
+        {% if is_parent %}
+        {% include 'includes/topbar_parent.html' %}
+        {% else %}
+        {% include 'includes/topbar_admin.html' %}
+        {% endif %}
+
+        <div class="admin-content">
+            <div class="page-header">
+                <div class="header-left">
+                    <h1>Transactions Financières</h1>
+                    <p>Historique complet de vos paiements et factures</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Exporter PDF
+                    </button>
+                    {% if is_parent %}
+                    <a href="{% url 'finance:checkout' %}" class="btn btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                        Effectuer un Paiement
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filters-card card shadow-sm mb-4">
+                <form class="filters-form p-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label text-sm font-bold text-gray-600">Rechercher</label>
+                            <input type="text" class="form-control" placeholder="Référence, motif...">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-sm font-bold text-gray-600">Statut</label>
+                            <select class="form-select">
+                                <option value="">Tous les statuts</option>
+                                <option value="valide">Validé</option>
+                                <option value="attente">En attente</option>
+                                <option value="echoue">Échoué</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-sm font-bold text-gray-600">Période</label>
+                            <select class="form-select">
+                                <option value="30">30 derniers jours</option>
+                                <option value="90">Ce trimestre</option>
+                                <option value="year">Cette année</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-primary w-100">Filtrer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TRANSACTIONS TABLE -->
+            <div class="table-card card shadow-sm overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">RÉFÉRENCE</th>
+                                <th>DATE</th>
+                                <th>MOTIF</th>
+                                <th>MÉTHODE</th>
+                                <th>MONTANT</th>
+                                <th>STATUT</th>
+                                <th class="text-end pe-4">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="font-mono text-sm font-bold">#{{ transaction.id|stringformat:"05d"
+                                        }}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span class="text-dark font-medium">{{ transaction.date_creation|date:"d M Y"
+                                            }}</span>
+                                        <span class="text-gray-400 text-xs">{{ transaction.date_creation|date:"H:i"
+                                            }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-dark font-medium">{{ transaction.motif|default:"Paiement
+                                        Scolarité" }}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        {% if "Orange" in transaction.methode_paiement %}
+                                        <span class="payment-dot bg-orange"></span>
+                                        {% elif "MTN" in transaction.methode_paiement %}
+                                        <span class="payment-dot bg-warning"></span>
+                                        {% else %}
+                                        <span class="payment-dot bg-secondary"></span>
+                                        {% endif %}
+                                        <span>{{ transaction.methode_paiement }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="font-bold text-dark">{{ transaction.montant|floatformat:0 }} GNF</span>
+                                </td>
+                                <td>
+                                    {% if transaction.statut == 'SUCCES' %}
+                                    <span class="badge bg-success-light text-success px-3 py-2 rounded-pill">
+                                        <i class="fas fa-check-circle me-1"></i> VALIDÉ
+                                    </span>
+                                    {% elif transaction.statut == 'EN_ATTENTE' %}
+                                    <span class="badge bg-warning-light text-warning px-3 py-2 rounded-pill">
+                                        <i class="fas fa-clock me-1"></i> EN ATTENTE
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-danger-light text-danger px-3 py-2 rounded-pill">
+                                        <i class="fas fa-times-circle me-1"></i> ÉCHOUÉ
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-light btn-sm rounded-circle" title="Voir reçu">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="text-gray-400 mb-2">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                                            <line x1="1" y1="10" x2="23" y2="10" />
+                                        </svg>
+                                    </div>
+                                    <p class="text-gray-500">Aucune transaction trouvée.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .payment-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .bg-success-light {
+        background-color: #dcfce7 !important;
+    }
+
+    .bg-warning-light {
+        background-color: #fef3c7 !important;
+    }
+
+    .bg-danger-light {
+        background-color: #fee2e2 !important;
+    }
+
+    .text-sm {
+        font-size: 0.875rem;
+    }
+
+    .font-medium {
+        font-weight: 500;
+    }
+
+    .font-mono {
+        font-family: monospace;
+    }
+</style>
+{% endblock %}

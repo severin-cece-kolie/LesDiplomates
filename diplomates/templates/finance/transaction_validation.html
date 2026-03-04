@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Validation Transaction - Les Diplomates{% endblock %}
+
+{% block extra_css %}
+<style>
+    .badge-shadow {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-line::before {
+        content: '';
+        position: absolute;
+        left: 11px;
+        top: 8px;
+        bottom: 8px;
+        width: 2px;
+        background: rgba(249, 115, 22, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+        <!-- Header -->
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 px-6 py-3 bg-white/50 dark:bg-black/20 backdrop-blur-md sticky top-0 z-50">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-4 text-primary">
+                    <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                        <span class="material-symbols-outlined text-primary">school</span>
+                    </div>
+                    <h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]">
+                        Complexe Scolaire Les Diplomates</h2>
+                </div>
+                <label class="flex flex-col min-w-40 h-10 max-w-64">
+                    <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                        <div
+                            class="text-primary/60 flex border-none bg-primary/5 items-center justify-center pl-4 rounded-l-lg">
+                            <span class="material-symbols-outlined">search</span>
+                        </div>
+                        <input
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-slate-100 focus:outline-0 focus:ring-0 border-none bg-primary/5 focus:border-none h-full placeholder:text-primary/40 px-4 rounded-l-none pl-2 text-base font-normal"
+                            placeholder="Rechercher transactions..." value="" />
+                    </div>
+                </label>
+            </div>
+            <div class="flex flex-1 justify-end gap-8">
+                <div class="flex items-center gap-9">
+                    <a href="{% url 'actualites:dashboard' %}"
+                        class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors">Tableau
+                        de bord</a>
+                    <a href="#"
+                        class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors">Élèves</a>
+                    <a class="text-primary text-sm font-bold" href="#">Transactions</a>
+                    <a href="#"
+                        class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors">Rapports</a>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/10 text-primary hover:bg-primary/20 transition-all">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <button
+                        class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/10 text-primary hover:bg-primary/20 transition-all">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                    <a href="{% url 'accounts:profile' %}"
+                        class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20"
+                        style='background-image: url("https://via.placeholder.com/40");'></a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col items-center py-8">
+            <div class="layout-content-container flex flex-col max-w-[1100px] w-full px-6 gap-6">
+                <!-- Breadcrumbs -->
+                <div class="flex flex-wrap gap-2 items-center text-sm">
+                    <a class="text-primary font-medium hover:underline" href="#">Finance</a>
+                    <span class="text-slate-400"><span
+                            class="material-symbols-outlined text-sm">chevron_right</span></span>
+                    <a class="text-primary font-medium hover:underline" href="#">Transactions en attente</a>
+                    <span class="text-slate-400"><span
+                            class="material-symbols-outlined text-sm">chevron_right</span></span>
+                    <span class="text-slate-500 dark:text-slate-400">Transaction #TR-8821</span>
+                </div>
+
+                <!-- Header Section -->
+                <div class="flex flex-wrap justify-between items-end gap-4 border-b border-primary/10 pb-6">
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                            <span
+                                class="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Validation
+                                en attente</span>
+                            <h1
+                                class="text-slate-900 dark:text-slate-100 text-3xl font-black leading-tight tracking-tight">
+                                Valider Demande de Paiement</h1>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-lg">Examen détaillé du paiement de scolarité
+                            de Moussa Camara.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="rejectTransaction()"
+                            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-all">
+                            <span class="material-symbols-outlined">close</span>
+                            Rejeter Transaction
+                        </button>
+                        <button onclick="approveTransaction()"
+                            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Approuver Paiement
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column: Details -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Student & Transaction Info Card -->
+                        <div
+                            class="bg-white dark:bg-slate-900/50 rounded-xl border border-primary/10 overflow-hidden shadow-sm">
+                            <div class="bg-primary/5 px-6 py-4 border-b border-primary/10 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">account_circle</span>
+                                <h3 class="font-bold text-slate-800 dark:text-slate-200">Informations Élève & Paiement
+                                </h3>
+                            </div>
+                            <div class="p-6 grid grid-cols-2 gap-y-6 gap-x-8">
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Nom de l'élève
+                                    </p>
+                                    <p class="text-slate-900 dark:text-slate-100 font-semibold text-base">Moussa Camara
+                                    </p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">ID Élève</p>
+                                    <p class="text-slate-900 dark:text-slate-100 font-semibold text-base">STU-2024-0012
+                                    </p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Niveau</p>
+                                    <p class="text-slate-900 dark:text-slate-100 font-semibold text-base">10ème Année -
+                                        Sciences</p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Objet du
+                                        paiement</p>
+                                    <p class="text-slate-900 dark:text-slate-100 font-semibold text-base">Scolarité
+                                        Annuelle - Trimestre 1</p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Date
+                                        Transaction</p>
+                                    <p class="text-slate-900 dark:text-slate-100 font-semibold text-base">24 Oct 2023
+                                    </p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Montant</p>
+                                    <p class="text-primary font-black text-xl">2,500,000 GNF</p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Méthode
+                                        Paiement</p>
+                                    <p
+                                        class="text-slate-900 dark:text-slate-100 font-semibold text-base flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">account_balance</span>
+                                        Virement Bancaire (Société Générale)
+                                    </p>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Numéro
+                                        Référence</p>
+                                    <p
+                                        class="text-slate-900 dark:text-slate-100 font-mono text-sm bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                                        BT-9900887722</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Audit Timeline -->
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-lg flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">history</span>
+                                Historique Transaction
+                            </h3>
+                            <div class="relative pl-6 space-y-6 timeline-line">
+                                <div class="relative flex gap-4">
+                                    <div
+                                        class="absolute -left-[20px] size-2.5 rounded-full bg-primary border-4 border-background-light dark:border-background-dark ring-4 ring-primary/10">
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 dark:text-slate-200">Transaction
+                                            Créée</p>
+                                        <p class="text-xs text-slate-500">24 Oct 2023 • 10:45 AM</p>
+                                        <p class="text-sm mt-1 text-slate-600 dark:text-slate-400">Parent (Alpha Camara)
+                                            a soumis la confirmation de virement bancaire.</p>
+                                    </div>
+                                </div>
+                                <div class="relative flex gap-4">
+                                    <div
+                                        class="absolute -left-[20px] size-2.5 rounded-full bg-primary/30 border-4 border-background-light dark:border-background-dark">
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-400">Validation en attente</p>
+                                        <p class="text-xs text-slate-400">Assigné: Département Finance</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Proof of Payment -->
+                <div class="space-y-6">
+                    <div
+                        class="bg-white dark:bg-slate-900/50 rounded-xl border border-primary/10 overflow-hidden shadow-sm flex flex-col h-full">
+                        <div
+                            class="bg-primary/5 px-6 py-4 border-b border-primary/10 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">receipt_long</span>
+                                <h3 class="font-bold text-slate-800 dark:text-slate-200">Preuve de Paiement</h3>
+                            </div>
+                            <button class="text-primary hover:text-primary/70 transition-colors">
+                                <span class="material-symbols-outlined">zoom_in</span>
+                            </button>
+                        </div>
+                        <div class="p-4 flex-1">
+                            <div
+                                class="relative group rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 aspect-[3/4]">
+                                <div
+                                    class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm z-10">
+                                    <button
+                                        class="bg-white text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center gap-2">
+                                        <span class="material-symbols-outlined">download</span>
+                                        Télécharger Original
+                                    </button>
+                                </div>
+                                <img alt="Confirmation de virement bancaire" class="w-full h-full object-cover"
+                                    src="https://via.placeholder.com/300x400/f3f4f6/6b7280?text=Reçu+Bancaire" />
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0 space-y-4">
+                            <div
+                                class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
+                                <p class="text-xs text-blue-700 dark:text-blue-300 font-bold uppercase mb-1">Conseil
+                                    Validation</p>
+                                <p class="text-sm text-blue-600 dark:text-blue-400">Vérifiez si la référence <span
+                                        class="font-mono font-bold">BT-9900887722</span> correspond au relevé bancaire
+                                    de l'école pour le 24 Oct.</p>
+                            </div>
+                            <div class="flex flex-col gap-3 pt-4 border-t border-primary/10">
+                                <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Ajouter une note de
+                                    validation (optionnel)</label>
+                                <textarea
+                                    class="w-full rounded-lg bg-primary/5 border-primary/10 focus:ring-primary focus:border-primary text-sm min-h-[100px]"
+                                    placeholder="Tapez une raison pour l'approbation ou le rejet..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Info -->
+            <div class="mt-8 p-6 bg-slate-100 dark:bg-slate-800/50 rounded-xl flex items-center gap-6">
+                <div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <span class="material-symbols-outlined">info</span>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-800 dark:text-slate-200">Automatisation Système</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">L'approbation de cette transaction générera
+                        automatiquement un reçu PDF, mettra à jour le registre financier de l'élève, et enverra une
+                        notification WhatsApp/Email au parent enregistré.</p>
+                </div>
+            </div>
+    </div>
+    </main>
+</div>
+</div>
+
+<script>
+    function approveTransaction() {
+        if (confirm('Êtes-vous sûr de vouloir approuver cette transaction ?')) {
+            // Simuler l'approbation
+            alert('Transaction approuvée avec succès !');
+            window.location.href = '/finance/payment-confirmation/';
+        }
+    }
+
+    function rejectTransaction() {
+        const reason = prompt('Veuillez indiquer la raison du rejet :');
+        if (reason) {
+            alert('Transaction rejetée. Raison: ' + reason);
+            window.location.href = '/finance/transactions/';
+        }
+    }
+</script>
+{% endblock %}

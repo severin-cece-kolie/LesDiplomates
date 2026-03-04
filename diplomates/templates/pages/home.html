@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accueil — Complexe Scolaire Les Diplomates{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="badge-pill">
+            <span class="badge-dot"></span>
+            INSCRIPTIONS OUVERTES 2026-2027
+        </div>
+        <h1 class="hero-title">
+            L'Excellence<br>
+            <span class="text-orange">Sans<br>Compromis</span><br>
+            en Guinée
+        </h1>
+        <p class="hero-subtitle">
+            Offrez à vos enfants un environnement d'apprentissage moderne alliant rigueur académique et innovation
+            technologique pour les leaders de demain.
+        </p>
+        <div class="hero-actions">
+            <a href="{% url 'accounts:register' %}" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <line x1="19" y1="8" x2="19" y2="14" />
+                    <line x1="22" y1="11" x2="16" y2="11" />
+                </svg>
+                Inscription 2026-2027
+            </a>
+            <a href="{% url 'actualites:visite_virtuelle' %}" class="btn btn-outline">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="10 8 16 12 10 16 10 8" />
+                </svg>
+                Visite Virtuelle
+            </a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <div class="hero-img-wrapper">
+            <img src="{% static 'images/hero-classroom.png' %}" alt="Salle de classe moderne"
+                onerror="this.style.background='#f3f4f6';this.style.display='flex'">
+            <div class="hero-img-overlay"></div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS SECTION -->
+<section class="stats-section">
+    <div class="stats-grid">
+        {% for stat in stats %}
+        <div class="stat-card reveal">
+            <div class="stat-trend positive">{{ stat.year }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+            <div class="stat-value" data-target="{{ stat.value }}">{{ stat.value }}%</div>
+            <div class="stat-bar">
+                <div class="stat-bar-fill" style="width:{{ stat.value }}%"></div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="stat-card" style="grid-column:1/-1;text-align:center;padding:16px;color:var(--gray-400);">
+            <p>Les statistiques de réussite seront affichées ici.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stats = document.querySelectorAll('.stat-value');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseFloat(entry.target.getAttribute('data-target'));
+                    let current = 0;
+                    const increment = target / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            entry.target.innerText = target + '%';
+                            clearInterval(timer);
+                        } else {
+                            entry.target.innerText = current.toFixed(1) + '%';
+                        }
+                    }, 20);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        stats.forEach(stat => observer.observe(stat));
+    });
+</script>
+
+<!-- CYCLES SECTION -->
+<section class="cycles-section" id="cycles">
+    <div class="section-container">
+        <div class="section-header">
+            <p class="section-tag">PARCOURS ÉDUCATIF</p>
+            <h2 class="section-title">Nos Cycles d'Enseignement</h2>
+            <p class="section-subtitle">Un accompagnement sur-mesure de la toute petite enfance jusqu'aux portes de
+                l'université.</p>
+            <a href="{% url 'actualites:programmes' %}" class="section-link">
+                Découvrir nos programmes
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="cycles-grid">
+            {% for cycle in cycles %}
+            <div class="cycle-card {% if cycle.nom == 'Primaire' %}featured{% endif %}">
+                {% if cycle.nom == 'Primaire' %}<div class="cycle-badge">Populaire</div>{% endif %}
+                <div
+                    class="cycle-icon {% if cycle.nom == 'Maternelle' %}maternelle{% elif cycle.nom == 'Primaire' %}primaire{% else %}secondaire{% endif %}">
+                    {% if cycle.nom == 'Maternelle' %}
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M18 20V10M12 20V4M6 20v-6" />
+                    </svg>
+                    {% elif cycle.nom == 'Primaire' %}
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                    {% else %}
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                        <polyline points="2 17 12 22 22 17" />
+                        <polyline points="2 12 12 17 22 12" />
+                    </svg>
+                    {% endif %}
+                </div>
+                <h3>{{ cycle.nom }}</h3>
+                <p>Programme officiel guinéen incluant :</p>
+                <ul class="cycle-features">
+                    {% for niv in cycle.niveaux.all|slice:":3" %}
+                    <li>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        {{ niv.nom }} {% if niv.est_annee_examen %}(Examen {{ niv.label_examen }}){% endif %}
+                    </li>
+                    {% endfor %}
+                    {% if cycle.niveaux.count > 3 %}
+                    <li class="text-gray">+ {{ cycle.niveaux.count|add:"-3" }} autres niveaux</li>
+                    {% endif %}
+                </ul>
+                <a href="{% url 'actualites:programmes' %}"
+                    class="btn {% if cycle.nom == 'Primaire' %}btn-primary{% else %}btn-ghost{% endif %}">Voir
+                    détails</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section" id="inscription">
+    <div class="cta-container">
+        <h2>Prêt à rejoindre l'excellence ?</h2>
+        <p>Le processus d'inscription pour l'année scolaire 2026-2027 est entièrement digitalisé. Réservez votre place
+            dès aujourd'hui.</p>
+        <div class="cta-actions">
+            <a href="{% url 'accounts:register' %}" class="btn btn-white">Commencer l'inscription</a>
+            <a href="{% url 'actualites:contact' %}" class="btn btn-outline-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.27 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.08 6.08l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                Nous appeler
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

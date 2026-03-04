@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Portail Parent — Complexe Scolaire Les Diplomates{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+
+<div class="admin-wrapper">
+
+    <!-- SIDEBAR PARENT -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <rect width="28" height="28" rx="8" fill="#F97316" />
+                    <path d="M14 6L20 10V14C20 17.3 17.4 20.4 14 21C10.6 20.4 8 17.3 8 14V10L14 6Z" fill="white" />
+                </svg>
+            </div>
+            <div>
+                <span class="brand-app">Academia</span>
+                <span class="brand-sub">GUINEA EXCELLENCE</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="sidebar-link active">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                </svg>
+                Tableau de Bord
+            </a>
+            <a href="#" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                Profil Élève
+            </a>
+            <a href="#" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+                Frais & Paiements
+            </a>
+            <a href="#" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                </svg>
+                Documents Numériques
+            </a>
+            <a href="#" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                </svg>
+                Présences
+            </a>
+            <a href="#" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                </svg>
+                Messages
+                <span class="sidebar-badge">3</span>
+            </a>
+        </nav>
+
+        <a href="#" class="contact-support-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Contacter le Support
+        </a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div class="topbar-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" placeholder="Rechercher...">
+            </div>
+
+            <div class="topbar-actions">
+                <button class="icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    <span class="notif-badge">2</span>
+                </button>
+
+                <div class="topbar-user">
+                    <div class="user-info">
+                        <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+                        <span class="user-role">PARENT</span>
+                    </div>
+                    <div class="avatar-sm">
+                        {{ user.username.0|upper }}
+                    </div>
+                    <a href="{% url 'accounts:logout' %}" class="btn-danger-small">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16,17 21,12 16,7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <div class="dashboard-welcome">
+                <h1>Bonjour, Mamadou</h1>
+                <p>Suivi des performances académiques d'<strong class="text-orange">Ibrahima Diallo</strong> pour le
+                    Trimestre 2.</p>
+            </div>
+
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-trend-badge positive">+1.2 pts</div>
+                    <p class="kpi-label">Moyenne Générale</p>
+                    <h2 class="kpi-value">17.4 <span class="kpi-unit">/ 20</span></h2>
+                    <p class="kpi-meta">Classé 3ème en Classe 10A</p>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-trend-badge">Payé 75%</div>
+                    <p class="kpi-label">Frais de Scolarité Payés</p>
+                    <h2 class="kpi-value">6,000,000 <span class="kpi-unit">GNF</span></h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:75%"></div>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-trend-badge urgent">Échéance : 30 Oct.</div>
+                    <p class="kpi-label">Solde Restant</p>
+                    <h2 class="kpi-value">2,000,000 <span class="kpi-unit">GNF</span></h2>
+                    <p class="kpi-alert-text">⚠ Prochain versement en attente</p>
+                </div>
+            </div>
+
+            <!-- PERFORMANCE + QUICK PAY -->
+            <div class="parent-dashboard-grid">
+                <!-- Performance -->
+                <div class="performance-card">
+                    <div class="perf-header">
+                        <h3>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316"
+                                stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                <polyline points="17 6 23 6 23 12" />
+                            </svg>
+                            Performances Récentes
+                        </h3>
+                        <a href="#" class="view-all-link orange">Bulletin Complet</a>
+                    </div>
+                    <div class="subject-list">
+                        <div class="subject-item">
+                            <div class="subject-icon math">M</div>
+                            <div class="subject-info">
+                                <strong>Mathématiques</strong>
+                                <small>Dernier Test : 12 Oct.</small>
+                            </div>
+                            <div class="subject-grade">
+                                <span class="grade">18/20</span>
+                                <span class="grade-label excellent">EXCELLENT</span>
+                            </div>
+                        </div>
+                        <div class="subject-item">
+                            <div class="subject-icon french">F</div>
+                            <div class="subject-info">
+                                <strong>Littérature Française</strong>
+                                <small>Dernier Devoir : 15 Oct.</small>
+                            </div>
+                            <div class="subject-grade">
+                                <span class="grade">15/20</span>
+                                <span class="grade-label good">TRÈS BIEN</span>
+                            </div>
+                        </div>
+                        <div class="subject-item">
+                            <div class="subject-icon physics">P</div>
+                            <div class="subject-info">
+                                <strong>Physique</strong>
+                                <small>Examen Intermédiaire</small>
+                            </div>
+                            <div class="subject-grade">
+                                <span class="grade">16.5/20</span>
+                                <span class="grade-label progress">BONS PROGRÈS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Pay -->
+                <div class="quick-pay-card">
+                    <h3>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                        Paiement Rapide
+                    </h3>
+                    <p>Réglez votre solde restant instantanément via Mobile Money.</p>
+                    <div class="payment-options">
+                        <a href="#" class="payment-option orange-money">
+                            <span class="payment-badge orange">ORANGE</span>
+                            <div>
+                                <strong>Orange Money</strong>
+                                <small>Payer 2,000,000 GNF</small>
+                            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </a>
+                        <a href="#" class="payment-option mtn-momo">
+                            <span class="payment-badge mtn">MTN</span>
+                            <div>
+                                <strong>MTN MoMo</strong>
+                                <small>Payer 2,000,000 GNF</small>
+                            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </a>
+                        <a href="#" class="payment-option-other">Voir d'autres méthodes</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANNOUNCEMENTS + EVENT -->
+            <div class="parent-dashboard-grid">
+                <div class="announcements-card">
+                    <h3>Dernières Annonces</h3>
+                    <div class="announcement-item">
+                        <div class="ann-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                        </div>
+                        <div>
+                            <strong>Réunion Parents-Professeurs</strong>
+                            <p>5 novembre 2024 · 14:00 - 17:00</p>
+                        </div>
+                    </div>
+                    <div class="announcement-item">
+                        <div class="ann-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                        </div>
+                        <div>
+                            <strong>Inauguration Nouveau Labo Sciences</strong>
+                            <p>Venez découvrir nos nouvelles installations STEM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="event-highlight-card orange-bg">
+                    <div class="event-date-display">
+                        <span>OCT</span>
+                        <strong>28</strong>
+                    </div>
+                    <div class="event-content">
+                        <h3>Journée Inter-Scolaire Sportive</h3>
+                        <p>Stade du 28 Septembre · 9:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

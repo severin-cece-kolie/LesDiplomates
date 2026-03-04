@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+<p>Bâtir les leaders de demain à travers une éducation moderne et rigoureuse.</p>
+</div>
+</section>
+
+<section class="about-vision py-16">
+    <div class="container">
+        <div class="grid grid-2 items-center gap-12">
+            <div>
+                <h2 class="text-3xl font-bold mb-6">Notre Mission</h2>
+                <div class="prose">
+                    <p>Le Complexe Scolaire <strong>Les Diplomates</strong> est né d'une volonté profonde de transformer
+                        le paysage éducatif guinéen. Notre mission est d'offrir un environnement d'apprentissage
+                        stimulant où chaque élève peut développer son plein potentiel intellectuel, social et moral.</p>
+                    <p>Nous croyons fermement que l'éducation est le pilier du développement. C'est pourquoi nous
+                        intégrons les dernières technologies éducatives (STEM) tout en respectant les valeurs
+                        fondamentales de notre culture.</p>
+                </div>
+
+                <div class="stats-mini-grid mt-8">
+                    <div class="stat-mini">
+                        <span class="number">15+</span>
+                        <span class="label">Années d'Expérience</span>
+                    </div>
+                    <div class="stat-mini">
+                        <span class="number">50+</span>
+                        <span class="label">Enseignants Experts</span>
+                    </div>
+                    <div class="stat-mini">
+                        <span class="number">100%</span>
+                        <span class="label">Réussite au Bac</span>
+                    </div>
+                </div>
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-2xl skew-y-1">
+                <img src="{% static 'images/about-vision.jpg' %}" alt="Vision" class="w-full h-auto"
+                    onerror="this.style.background='#F97316'; this.style.padding='100px'; this.innerText='Image Vision'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="values-section py-16 bg-slate-50">
+    <div class="container text-center mb-12">
+        <h2 class="text-3xl font-bold">Nos Valeurs</h2>
+        <p class="text-gray max-w-2xl mx-auto">Ces principes guident chacune de nos actions et définissent l'identité de
+            nos élèves.</p>
+    </div>
+    <div class="container">
+        <div class="grid grid-3 gap-8">
+            <div class="card p-8 text-center hover-up">
+                <div class="feature-icon orange-bg text-white mx-auto mb-4">
+                    <span class="material-symbols-outlined">verified</span>
+                </div>
+                <h3>Intégrité</h3>
+                <p>Nous formons des citoyens honnêtes et responsables, conscients de leur impact sur la société.</p>
+            </div>
+            <div class="card p-8 text-center hover-up border-primary">
+                <div class="feature-icon orange-bg text-white mx-auto mb-4">
+                    <span class="material-symbols-outlined">star</span>
+                </div>
+                <h3>Excellence</h3>
+                <p>Le dépassement de soi est au cœur de notre pédagogie. Nous visons toujours les plus hauts standards.
+                </p>
+            </div>
+            <div class="card p-8 text-center hover-up">
+                <div class="feature-icon orange-bg text-white mx-auto mb-4">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                </div>
+                <h3>Innovation</h3>
+                <p>Nous préparons nos élèves aux défis technologiques du futur à travers nos programmes STEM.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

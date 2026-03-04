@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Liste des Élèves - Les Diplomates Admin{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+{% block content %}
+<div class="admin-wrapper">
+    {% include 'includes/sidebar_admin.html' %}
+    <div class="admin-main">
+        {% block topbar %}{% include 'includes/topbar_admin.html' %}{% endblock %}
+        <div class="admin-content">
+            <div class="page-header">
+                <div class="header-left"><h1>Gestion des Élèves</h1><p>{{ eleves.count }} élève{{ eleves.count|pluralize }} inscrit{{ eleves.count|pluralize }}</p></div>
+                <div class="header-actions"><a href="{% url 'eleves:nouveau' %}" class="btn btn-primary">Ajouter un Élève</a></div>
+            </div>
+            <div class="filters-card">
+                <form method="GET" class="filters-form">
+                    <div class="form-group flex-1"><label>Rechercher</label><input type="text" name="q" class="form-control" placeholder="Nom, prénom, matricule..." value="{{ request.GET.q }}"></div>
+                    <div class="form-group flex-1"><label>Classe</label><select name="classe" class="form-control"><option value="">Toutes les classes</option>{% for cl in classes %}<option value="{{ cl.id }}">{{ cl.nom }}</option>{% endfor %}</select></div>
+                    <div class="form-group flex-1"><label>Statut</label><select name="statut" class="form-control"><option value="">Tous</option><option value="ACTIF">Actif</option><option value="INACTIF">Inactif</option><option value="RENVOYE">Renvoyé</option></select></div>
+                    <div class="form-group align-bottom"><button type="submit" class="btn btn-primary">Filtrer</button><a href="{% url 'eleves:liste' %}" class="btn btn-outline" style="margin-left:8px;">Réinitialiser</a></div>
+                </form>
+            </div>
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>MATRICULE</th><th>NOM COMPLET</th><th>CLASSE</th><th>PARENT</th><th>STATUT</th><th>ACTIONS</th></tr></thead>
+                        <tbody>
+                            {% for eleve in eleves %}
+                            <tr>
+                                <td><a href="{% url 'eleves:detail' id=eleve.id %}" style="color:#F97316;font-weight:700;font-family:monospace;">{{ eleve.matricule }}</a></td>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        {% if eleve.photo %}<img src="{{ eleve.photo.url }}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+                                        {% else %}<div style="width:36px;height:36px;border-radius:50%;background:#FFF7ED;color:#F97316;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ eleve.prenom.0|upper }}</div>{% endif %}
+                                        <div><strong>{{ eleve.nom_complet }}</strong><br><small style="color:#9ca3af;">{% if eleve.sexe == 'M' %}Masculin{% else %}Féminin{% endif %} · {{ eleve.date_naissance|date:"d/m/Y" }}</small></div>
+                                    </div>
+                                </td>
+                                <td>{% if eleve.classe %}<strong>{{ eleve.classe.nom }}</strong>{% if eleve.classe.niveau_scolaire %}<br><small style="color:#9ca3af;">{{ eleve.classe.niveau_scolaire.cycle.nom }}</small>{% endif %}{% else %}—{% endif %}</td>
+                                <td>{% for p in eleve.parents.all %}<strong>{{ p.nom_complet }}</strong>{% if p.telephone %}<br><small style="color:#9ca3af;">{{ p.telephone }}</small>{% endif %}{% empty %}<span style="color:#9ca3af;">—</span>{% endfor %}</td>
+                                <td>{% if eleve.statut == 'ACTIF' %}<span class="status-badge-validated">ACTIF</span>{% elif eleve.statut == 'INACTIF' %}<span class="status-badge-pending">INACTIF</span>{% else %}<span class="status-badge-rejected">RENVOYÉ</span>{% endif %}</td>
+                                <td>
+                                    <div style="display:flex;gap:6px;">
+                                        <a href="{% url 'eleves:detail' id=eleve.id %}" class="btn-icon" title="Voir"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></a>
+                                        <a href="{% url 'badges:student' eleve_id=eleve.id %}" class="btn-icon" title="Badge" style="color:#F97316;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg></a>
+                                        <a href="{% url 'notes:bulletin' eleve_id=eleve.id trimestre_id=1 %}" class="btn-icon" title="Bulletin" style="color:#3b82f6;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="6" style="text-align:center;padding:60px;color:#9ca3af;">{% if request.GET.q %}Aucun élève pour "{{ request.GET.q }}". <a href="{% url 'eleves:liste' %}" style="color:#F97316;">Voir tous</a>{% else %}Aucun élève inscrit. <a href="{% url 'eleves:nouveau' %}" class="btn btn-primary" style="margin-top:12px;">Ajouter</a>{% endif %}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

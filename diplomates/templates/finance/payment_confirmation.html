@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmation Paiement - Les Diplomates{% endblock %}
+
+{% block extra_css %}
+<style>
+    .success-animation {
+        animation: successPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes successPulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+    }
+
+    .receipt-card {
+        background: linear-gradient(135deg, #f8f7f5 0%, #f3f4f6 100%);
+    }
+
+    .dark .receipt-card {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+        <!-- Navigation Bar -->
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 px-6 md:px-20 py-4 bg-white dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-2xl font-bold">school</span>
+                </div>
+                <h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-tight">Complexe
+                    Scolaire Les Diplomates</h2>
+            </div>
+            <div class="hidden md:flex flex-1 justify-end gap-8">
+                <nav class="flex items-center gap-8">
+                    <a href="{% url 'actualites:dashboard' %}"
+                        class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors">Tableau
+                        de bord</a>
+                    <a class="text-primary text-sm font-bold border-b-2 border-primary" href="#">Paiements</a>
+                    <a href="#"
+                        class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors">Cours</a>
+                    <a href="{% url 'accounts:profile' %}"
+                        class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors">Profil</a>
+                </nav>
+                <div
+                    class="bg-slate-200 dark:bg-slate-700 rounded-full size-10 flex items-center justify-center overflow-hidden border-2 border-primary/20">
+                    <img class="w-full h-full object-cover" src="https://via.placeholder.com/40"
+                        alt="Avatar utilisateur" />
+                </div>
+            </div>
+            <div class="md:hidden">
+                <span class="material-symbols-outlined text-slate-900 dark:text-white">menu</span>
+            </div>
+        </header>
+
+        <main class="flex flex-1 justify-center py-10 px-4">
+            <div
+                class="layout-content-container flex flex-col max-w-[720px] flex-1 bg-white dark:bg-slate-900 rounded-xl shadow-xl shadow-primary/5 overflow-hidden">
+                <!-- Success Header -->
+                <div class="pt-12 pb-8 flex flex-col items-center text-center px-6">
+                    <div class="relative mb-6 success-animation">
+                        <div class="size-24 rounded-full bg-green-100 flex items-center justify-center">
+                            <span
+                                class="material-symbols-outlined text-green-600 text-6xl font-bold">check_circle</span>
+                        </div>
+                        <div
+                            class="absolute -top-1 -right-1 size-8 rounded-full bg-primary flex items-center justify-center border-4 border-white dark:border-slate-900 shadow-sm">
+                            <span class="material-symbols-outlined text-white text-lg">smartphone</span>
+                        </div>
+                    </div>
+                    <h1 class="text-slate-900 dark:text-white text-3xl font-extrabold mb-2">Paiement Réussi !</h1>
+                    <p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto">Votre paiement a été traité sécurisé
+                        via Mobile Money.</p>
+                </div>
+
+                <!-- Notification Message -->
+                <div class="mx-8 mb-8 p-4 bg-primary/10 border border-primary/20 rounded-lg flex items-center gap-4">
+                    <span class="material-symbols-outlined text-primary">notifications_active</span>
+                    <p class="text-sm text-slate-700 dark:text-slate-300 font-medium">
+                        Une confirmation SMS et un reçu Email ont été envoyés aux contacts du parent enregistré.
+                    </p>
+                </div>
+
+                <!-- Transaction Card -->
+                <div class="px-8 pb-8">
+                    <div class="receipt-card dark:bg-slate-800/50 rounded-xl border border-primary/10 p-6">
+                        <div
+                            class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-primary/10 pb-6">
+                            <div>
+                                <p
+                                    class="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-widest font-bold mb-1">
+                                    ID Transaction</p>
+                                <p class="text-slate-900 dark:text-white text-xl font-bold font-mono">#GN-MM-982341</p>
+                            </div>
+                            <div
+                                class="px-4 py-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-sm">event</span>
+                                <span class="text-sm font-semibold">24 Oct 2023 • 14:32</span>
+                            </div>
+                        </div>
+
+                        <!-- Receipt Details -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Nom Élève</span>
+                                <span class="text-slate-900 dark:text-white font-bold">Mamadou Diallo</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Classe / Département</span>
+                                <span class="text-slate-900 dark:text-white font-bold text-right">10ème - Sciences
+                                    Pures</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Méthode Paiement</span>
+                                <div class="flex items-center gap-2">
+                                    <div class="size-6 rounded bg-orange-100 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-orange-600 text-xs">payments</span>
+                                    </div>
+                                    <span class="text-slate-900 dark:text-white font-bold">Orange Money</span>
+                                </div>
+                            </div>
+                            <div class="my-4 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent">
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Montant Payé</span>
+                                <span class="text-primary text-2xl font-black">500,000 GNF</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-500 dark:text-slate-400 font-medium">Solde Restant</span>
+                                <span class="text-slate-900 dark:text-white font-bold">0 GNF</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="px-8 pb-12 flex flex-col md:flex-row gap-4">
+                    <button onclick="downloadReceipt()"
+                        class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined">download</span>
+                        Télécharger Reçu (PDF)
+                    </button>
+                    <button onclick="goToDashboard()"
+                        class="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold py-4 rounded-xl transition-all border border-slate-200 dark:border-slate-700">
+                        <span class="material-symbols-outlined text-primary">dashboard</span>
+                        Retour Tableau de Bord
+                    </button>
+                </div>
+
+                <!-- Security Footer -->
+                <div
+                    class="bg-slate-50 dark:bg-slate-900/80 p-6 flex flex-col items-center gap-3 border-t border-primary/5">
+                    <div class="flex items-center gap-2 opacity-50">
+                        <span class="material-symbols-outlined text-sm">lock</span>
+                        <span class="text-[10px] uppercase font-bold tracking-widest">Transaction Sécurisée Chiffrée
+                            Bout-en-Bout</span>
+                    </div>
+                    <div class="flex gap-4 grayscale opacity-40">
+                        <div
+                            class="h-6 w-12 bg-slate-400 rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
+                            SSL</div>
+                        <div
+                            class="h-6 w-12 bg-slate-400 rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
+                            PCI</div>
+                        <div
+                            class="h-6 w-12 bg-slate-400 rounded-sm flex items-center justify-center text-[8px] text-white font-bold">
+                            3DS</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-8 text-center text-slate-500 dark:text-slate-500 text-sm">
+            <p>© 2023 Complexe Scolaire Les Diplomates. Tous droits réservés.</p>
+            <div class="flex justify-center gap-6 mt-2 font-medium">
+                <a class="hover:text-primary" href="#">Centre Aide</a>
+                <a class="hover:text-primary" href="#">Politique Confidentialité</a>
+                <a class="hover:text-primary" href="#">Conditions Service</a>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script>
+    function downloadReceipt() {
+        // Simuler le téléchargement du reçu PDF
+        alert('Téléchargement du reçu PDF en cours...');
+        // window.print(); // Alternative pour impression
+    }
+
+    function goToDashboard() {
+        window.location.href = '{% url "dashboard" %}';
+    }
+</script>
+{% endblock %}

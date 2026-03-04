@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="page-header-standard">
+    <div class="container">
+        <div class="header-badge">CADRE DE VIE</div>
+        <h1>Règlement Intérieur</h1>
+        <p>Droits, devoirs et principes fondamentaux de notre établissement.</p>
+    </div>
+</section>
+
+<section class="reglement-section py-16">
+    <div class="container max-w-4xl">
+        <div class="chapters-container">
+            {% for chapter in chapters %}
+            <div class="chapter-card mb-8">
+                <div class="chapter-header">
+                    <span class="chapter-number">{{ forloop.counter }}</span>
+                    <h2>{{ chapter.title }}</h2>
+                </div>
+                <div class="chapter-content">
+                    {{ chapter.content|safe|linebreaks }}
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <p>Le contenu du règlement est en cours de mise à jour.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

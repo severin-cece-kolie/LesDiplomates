@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ eleve.nom_complet }} - Les Diplomates Admin{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+{% block content %}
+<div class="admin-wrapper">
+    {% include 'includes/sidebar_admin.html' %}
+    <div class="admin-main">
+        {% block topbar %}{% include 'includes/topbar_admin.html' %}{% endblock %}
+        <div class="admin-content">
+            <div class="page-header">
+                <div class="header-left"><a href="{% url 'eleves:liste' %}" class="back-link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Retour</a></div>
+                <div class="header-actions"><a href="{% url 'eleves:certificat' id=eleve.id %}" class="btn btn-secondary">Certificat</a><a href="{% url 'badges:student' eleve_id=eleve.id %}" class="btn btn-outline">Badge</a></div>
+            </div>
+            <div style="background:white;border-radius:16px;padding:28px;display:flex;gap:24px;align-items:center;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                {% if eleve.photo %}<img src="{{ eleve.photo.url }}" alt="{{ eleve.nom_complet }}" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid #FFF7ED;">
+                {% else %}<div style="width:110px;height:110px;border-radius:50%;background:#FFF7ED;color:#F97316;font-size:2.5rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ eleve.prenom.0|upper }}</div>{% endif %}
+                <div style="flex:1;">
+                    <h1 style="font-size:1.9rem;font-weight:800;margin:0 0 6px;">{{ eleve.nom_complet }}</h1>
+                    <div style="display:flex;flex-wrap:wrap;gap:12px;color:#6b7280;font-size:0.9rem;margin-bottom:14px;">
+                        <span>{% if eleve.classe %}{{ eleve.classe.nom }}{% else %}—{% endif %}</span>
+                        <span style="font-family:monospace;background:#FFF7ED;color:#F97316;padding:2px 10px;border-radius:6px;font-weight:700;">{{ eleve.matricule }}</span>
+                        {% if eleve.statut == 'ACTIF' %}<span class="status-badge-validated">ACTIF</span>{% elif eleve.statut == 'INACTIF' %}<span class="status-badge-pending">INACTIF</span>{% else %}<span class="status-badge-rejected">RENVOYÉ</span>{% endif %}
+                    </div>
+                    <div style="display:flex;gap:10px;">
+                        <a href="{% url 'badges:student' eleve_id=eleve.id %}" class="btn btn-outline" style="font-size:0.85rem;padding:6px 14px;">Voir Badge</a>
+                        <a href="{% url 'notes:bulletin' eleve_id=eleve.id trimestre_id=1 %}" class="btn btn-outline" style="font-size:0.85rem;padding:6px 14px;">Bulletin</a>
+                    </div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
+                <div style="display:flex;flex-direction:column;gap:20px;">
+                    <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <h3 style="font-weight:700;border-bottom:2px solid #FFF7ED;padding-bottom:12px;margin-bottom:20px;">Informations Personnelles</h3>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                            <div><p style="color:#9ca3af;font-size:0.82rem;margin-bottom:4px;">Date de naissance</p><p style="font-weight:600;">{{ eleve.date_naissance|date:"d F Y" }}</p></div>
+                            <div><p style="color:#9ca3af;font-size:0.82rem;margin-bottom:4px;">Lieu de naissance</p><p style="font-weight:600;">{{ eleve.lieu_naissance|default:"—" }}</p></div>
+                            <div><p style="color:#9ca3af;font-size:0.82rem;margin-bottom:4px;">Sexe</p><p style="font-weight:600;">{% if eleve.sexe == 'M' %}Masculin{% else %}Féminin{% endif %}</p></div>
+                            <div><p style="color:#9ca3af;font-size:0.82rem;margin-bottom:4px;">Date inscription</p><p style="font-weight:600;">{{ eleve.date_inscription|date:"d/m/Y" }}</p></div>
+                            <div><p style="color:#9ca3af;font-size:0.82rem;margin-bottom:4px;">Classe</p><p style="font-weight:600;">{% if eleve.classe %}{{ eleve.classe.nom }}{% if eleve.classe.niveau_scolaire %} ({{ eleve.classe.niveau_scolaire.cycle.nom }}){% endif %}{% else %}Non assignée{% endif %}</p></div>
+                            <div><p style="color:#9ca3af;font-size:0.82rem;margin-bottom:4px;">Année scolaire</p><p style="font-weight:600;">{% if eleve.classe %}{{ eleve.classe.annee_scolaire }}{% else %}—{% endif %}</p></div>
+                        </div>
+                    </div>
+                    <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <h3 style="font-weight:700;border-bottom:2px solid #FFF7ED;padding-bottom:12px;margin-bottom:20px;">Contacts & Tuteurs</h3>
+                        {% for parent in eleve.parents.all %}
+                        <div style="{% if not forloop.first %}border-top:1px solid #f3f4f6;margin-top:16px;padding-top:16px;{% endif %}">
+                            <p style="font-weight:700;font-size:1rem;margin-bottom:8px;">{{ parent.nom_complet }}</p>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                                <div><p style="color:#9ca3af;font-size:0.8rem;">Téléphone</p><p style="font-weight:600;">{{ parent.telephone|default:"—" }}</p></div>
+                                <div><p style="color:#9ca3af;font-size:0.8rem;">Profession</p><p style="font-weight:600;">{{ parent.profession|default:"—" }}</p></div>
+                                {% if parent.adresse %}<div style="grid-column:1/-1;"><p style="color:#9ca3af;font-size:0.8rem;">Adresse</p><p style="font-weight:600;">{{ parent.adresse }}</p></div>{% endif %}
+                            </div>
+                        </div>
+                        {% empty %}<p style="color:#9ca3af;text-align:center;padding:20px;">Aucun parent/tuteur enregistré.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:20px;">
+                    <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <h3 style="font-weight:700;margin-bottom:16px;">Statut Financier</h3>
+                        {% for f in eleve.frais_scolarite.all %}
+                        <div style="margin-bottom:12px;">
+                            <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px;"><span style="color:#6b7280;">Payé</span><strong>{{ f.montant_paye|floatformat:0 }} GNF</strong></div>
+                            <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;"><span style="color:#6b7280;">Attendu</span><strong>{{ f.montant_attendu|floatformat:0 }} GNF</strong></div>
+                            {% if f.est_solde %}<span class="status-badge-validated" style="width:100%;display:block;text-align:center;">A JOUR</span>
+                            {% else %}<span class="status-badge-pending" style="width:100%;display:block;text-align:center;">EN ATTENTE</span>{% endif %}
+                        </div>
+                        {% empty %}<p style="color:#9ca3af;font-size:0.85rem;text-align:center;">Aucun frais enregistré.</p>
+                        {% endfor %}
+                        <a href="{% url 'finance:transactions' %}" class="btn btn-secondary" style="width:100%;text-align:center;margin-top:12px;font-size:0.85rem;">Historique paiements</a>
+                    </div>
+                    <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <h3 style="font-weight:700;margin-bottom:16px;">Actions Rapides</h3>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <a href="{% url 'eleves:certificat' id=eleve.id %}" class="btn btn-outline" style="text-align:left;">Certificat de Scolarité</a>
+                            <a href="{% url 'eleves:renouveler_qr' id=eleve.id %}" class="btn btn-outline" style="text-align:left;">Renouveler QR Code</a>
+                            <a href="{% url 'eleves:contact_sms' id=eleve.id %}" class="btn btn-outline" style="text-align:left;">Contacter le Parent (SMS)</a>
+                            <a href="{% url 'badges:student' eleve_id=eleve.id %}" class="btn btn-primary" style="text-align:left;">Voir le Badge</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

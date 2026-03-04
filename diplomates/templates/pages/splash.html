@@ -1,0 +1,246 @@
+{% load static %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert"
+    style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; background: {% if message.tags == 'success' %}#10b981{% elif message.tags == 'error' %}#ef4444{% else %}#3b82f6{% endif %}; color: white; padding: 12px 16px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+        style="background: none; border: none; color: white; float: right; font-size: 20px; cursor: pointer;">&times;</button>
+</div>
+{% endfor %}
+{% endif %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complexe Scolaire Les Diplomates</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            margin: 0;
+            background: #FAF9F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .splash {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .splash-logo {
+            width: 72px;
+            height: 72px;
+            background: #F97316;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+        }
+
+        .splash-illustration {
+            position: relative;
+            width: 280px;
+            height: 200px;
+            margin: 0 auto 36px;
+        }
+
+        .splash-illustration .star1,
+        .splash-illustration .star2 {
+            position: absolute;
+            background: #FDE68A;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .splash-illustration .star1 {
+            width: 80px;
+            height: 80px;
+            top: 10px;
+            left: 50px;
+            opacity: 0.6;
+        }
+
+        .splash-illustration .star2 {
+            width: 100px;
+            height: 100px;
+            top: 0;
+            right: 30px;
+            opacity: 0.4;
+        }
+
+        .splash-illustration .screen {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 150px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .splash-illustration .person {
+            font-size: 48px;
+        }
+
+        .splash-bulb {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: #FFF7ED;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .splash h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .splash p {
+            color: #6b7280;
+            margin-bottom: 32px;
+            font-size: 1rem;
+        }
+
+        .splash-progress {
+            width: 180px;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            margin: 0 auto 14px;
+            overflow: hidden;
+        }
+
+        .splash-progress-fill {
+            height: 100%;
+            background: #F97316;
+            border-radius: 6px;
+            animation: loading 2s ease forwards;
+        }
+
+        @keyframes loading {
+            0% {
+                width: 0
+            }
+
+            100% {
+                width: 100%
+            }
+        }
+
+        .splash-status {
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            color: #F97316;
+        }
+
+        .splash-features {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 40px;
+            opacity: 0.5;
+        }
+
+        .splash-features span {
+            font-size: .75rem;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-close {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="splash">
+        <div class="splash-logo">
+            <svg width="36" height="36" viewBox="0 0 28 28" fill="none">
+                <path d="M14 3L22 8V14C22 18.4 18.4 22 14 23C9.6 22 6 18.4 6 14V8L14 3Z" fill="white" />
+            </svg>
+        </div>
+
+        <div class="splash-illustration">
+            <div class="star1"></div>
+            <div class="star2"></div>
+            <div class="screen">
+                <span class="person">👨‍👧</span>
+            </div>
+            <div class="splash-bulb">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                    <path d="M9 21h6m-6-4h6m-5-2a6 6 0 1 1 4 0" />
+                </svg>
+            </div>
+        </div>
+
+        <h1>Complexe Scolaire<br>Les Diplomates</h1>
+        <p>Donner les clés du succès à la prochaine génération<br>à travers l'innovation et l'excellence académique.</p>
+
+        <div class="splash-progress">
+            <div class="splash-progress-fill"></div>
+        </div>
+        <p class="splash-status">INITIALISATION DU PORTAIL...</p>
+
+        <div class="splash-features">
+            <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                Sécurité Administrative
+            </span>
+            <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                </svg>
+                Sync Temps Réel
+            </span>
+            <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                Métriques Avancées
+            </span>
+        </div>
+    </div>
+    <script>
+        // Afficher les messages s'il y en a
+        document.querySelectorAll('.alert').forEach(alert => {
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }, 4000);
+        });
+
+        // Redirection après 2.4 secondes
+        setTimeout(() => {
+            window.location.href = "{% url 'accounts:login' %}";
+        }, 2400);
+    </script>
+</body>
+
+</html>

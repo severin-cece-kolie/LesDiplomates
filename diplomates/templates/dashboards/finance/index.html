@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tableau de Bord Finance — Complexe Scolaire Les Diplomates{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+    <!-- SIDEBAR FINANCE -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <rect width="28" height="28" rx="8" fill="#22c55e" />
+                    <path d="M14 6v12M9 10h10M9 14h10" stroke="white" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </div>
+            <div>
+                <span class="brand-app">Finance</span>
+                <span class="brand-sub">CONTRÔLE GESTION</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{% url 'finance:dashboard' %}" class="sidebar-link active">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="{% url 'finance:transactions' %}" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                Transactions
+            </a>
+            <a href="{% url 'finance:paiement_manuel' %}" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                Nouveau Paiement
+            </a>
+            <a href="{% url 'accounts:profile' %}" class="sidebar-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                Mon Profil
+            </a>
+            <a href="{% url 'accounts:logout' %}" class="sidebar-link" style="margin-top:auto;color:var(--red);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16,17 21,12 16,7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Déconnexion
+            </a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <div class="topbar-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" placeholder="Rechercher...">
+            </div>
+            <div class="topbar-user">
+                <div class="user-info">
+                    <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+                    <span class="user-role">FINANCE</span>
+                </div>
+                <div class="avatar-sm">{{ user.username.0|upper }}</div>
+                <a href="{% url 'accounts:logout' %}" class="btn-danger-small">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16,17 21,12 16,7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                </a>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <div class="dashboard-welcome">
+                <h1>Gestion Financière</h1>
+                <p>Bienvenue, {{ user.get_full_name|default:user.username }}. Tableau de bord — <strong>{{ mois_actuel
+                        }}</strong></p>
+            </div>
+
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <p class="kpi-label">Recettes ce Mois (Validées)</p>
+                    <h2 class="kpi-value orange">GNF {{ recettes_mois|floatformat:0 }}</h2>
+                    <span class="kpi-trend positive">↗ {{ mois_actuel }}</span>
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Soldes Impayés</p>
+                    <h2 class="kpi-value orange">GNF {{ total_impaye|floatformat:0 }}</h2>
+                    {% if nb_eleves_retard > 0 %}
+                    <span class="kpi-alert">⚠ {{ nb_eleves_retard }} élève{{ nb_eleves_retard|pluralize }} en
+                        retard</span>
+                    {% else %}
+                    <span class="kpi-trend positive">✓ Aucun retard</span>
+                    {% endif %}
+                </div>
+                <div class="kpi-card">
+                    <p class="kpi-label">Taux de Recouvrement</p>
+                    <h2 class="kpi-value orange">{{ taux_recouvrement }}%</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:{{ taux_recouvrement }}%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRANSACTIONS TABLE + QUICK ACTIONS -->
+            <div class="dashboard-grid" style="margin-top:24px;">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Transactions Récentes</h3>
+                        <a href="{% url 'finance:transactions' %}" class="view-all-link orange">Voir tout</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>ÉLÈVE</th>
+                                <th>MÉTHODE</th>
+                                <th>MONTANT</th>
+                                <th>STATUT</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in recent_transactions %}
+                            <tr>
+                                <td>{{ t.created_at|date:"d/m/Y" }}</td>
+                                <td><strong>{{ t.eleve.nom_complet }}</strong></td>
+                                <td>{{ t.get_methode_display }}</td>
+                                <td>{{ t.montant|floatformat:0 }} GNF</td>
+                                <td>
+                                    {% if t.statut == 'VALIDE' %}
+                                    <span class="status-badge-validated">VALIDÉ</span>
+                                    {% elif t.statut == 'ATTENTE' %}
+                                    <span class="status-badge-pending">EN ATTENTE</span>
+                                    {% else %}
+                                    <span class="status-badge-rejected">REJETÉ</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if t.statut == 'ATTENTE' %}
+                                    <a href="{% url 'finance:valider' id=t.id %}" class="btn btn-primary"
+                                        style="padding:4px 10px;font-size:0.8rem;">Valider</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" style="text-align:center;padding:40px;color:var(--gray-400);">Aucune
+                                    transaction.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <aside class="quick-actions-panel">
+                    <h3>Actions Rapides</h3>
+                    <a href="{% url 'finance:paiement_manuel' %}" class="quick-action-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <line x1="2" y1="10" x2="22" y2="10" />
+                        </svg>
+                        Enregistrer un Paiement
+                    </a>
+                    <a href="{% url 'finance:transactions' %}" class="quick-action-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        Toutes les Transactions
+                    </a>
+
+                    <!-- Répartition par méthode -->
+                    {% if methode_stats %}
+                    <div class="activity-log" style="margin-top:16px;">
+                        <h4 style="font-size:0.9rem;color:var(--gray-600);margin-bottom:12px;">Répartition Paiements
+                        </h4>
+                        {% for m in methode_stats %}
+                        <div style="margin-bottom:10px;">
+                            <div
+                                style="display:flex;justify-content:space-between;font-size:0.83rem;margin-bottom:4px;">
+                                <span>{{ m.methode }}</span>
+                                <strong>{{ m.pct }}%</strong>
+                            </div>
+                            <div style="background:var(--gray-100);border-radius:6px;height:6px;overflow:hidden;">
+                                <div style="background:var(--orange);width:{{ m.pct }}%;height:100%;border-radius:6px;">
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Activités récentes -->
+                    <div class="activity-log">
+                        <h4>Dernières Activités</h4>
+                        {% for act in activites %}
+                        <div class="activity-item {% if act.statut == 'VALIDE' %}active{% endif %}">
+                            <span class="act-dot {% if act.statut == 'VALIDE' %}orange{% else %}gray{% endif %}"></span>
+                            <div>
+                                <p>{{ act.eleve.nom_complet }} — {{ act.montant|floatformat:0 }} GNF</p>
+                                <small>{{ act.created_at|date:"d/m/Y H:i" }} • {{ act.get_statut_display }}</small>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p style="color:var(--gray-400);font-size:0.85rem;">Aucune activité.</p>
+                        {% endfor %}
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

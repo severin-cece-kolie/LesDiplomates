@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ajouter/Modifier Élève — Les Diplomates Admin{% endblock %}
+{% block body_class %}admin-layout{% endblock %}
+
+{% block content %}
+<div class="admin-wrapper">
+    {% include 'includes/sidebar_admin.html' %}
+
+    <div class="admin-main">
+        {% block topbar %}
+        {% include 'includes/topbar_admin.html' %}
+        {% endblock %}
+
+        <div class="admin-content">
+            <div class="page-header">
+                <div class="header-left">
+                    <a href="{% url 'eleves:liste' %}" class="back-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Retour à la liste
+                    </a>
+                    <h1>Nouvelle Inscription</h1>
+                    <p>Enregistrement d'un nouvel élève dans la base de données</p>
+                </div>
+            </div>
+
+            <div class="form-card mx-auto" style="max-width: 900px;">
+                <form method="post" enctype="multipart/form-data" class="standard-form">
+                    {% csrf_token %}
+
+                    <h3 class="form-section-title">Informations de l'Élève</h3>
+
+                    <!-- PHOTO UPLOAD -->
+                    <div class="form-group mb-6 flex items-center gap-4">
+                        <div class="avatar-lg bg-gray-200 flex items-center justify-center text-gray"
+                            style="width: 80px; height: 80px; border-radius: 50%;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
+                        </div>
+                        <div>
+                            <label class="btn btn-secondary text-sm cursor-pointer">
+                                Télécharger Photo
+                                <input type="file" style="display: none;" accept="image/*">
+                            </label>
+                            <p class="text-xs text-gray mt-1">Format JPG, PNG (Max 2MB). Requis pour le badge.</p>
+                        </div>
+                    </div>
+
+                    <!-- Noms -->
+                    <div class="form-group grid-2">
+                        <div>
+                            <label for="prenom">Prénoms <span class="required">*</span></label>
+                            <input type="text" id="prenom" name="prenom" class="form-control" required
+                                placeholder="Ex: Amadou">
+                        </div>
+                        <div>
+                            <label for="nom">Nom de Famille <span class="required">*</span></label>
+                            <input type="text" id="nom" name="nom" class="form-control" required
+                                placeholder="Ex: Diallo">
+                        </div>
+                    </div>
+
+                    <!-- Naissance -->
+                    <div class="form-group grid-3">
+                        <div>
+                            <label for="date_naissance">Date de naissance <span class="required">*</span></label>
+                            <input type="date" id="date_naissance" name="date_naissance" class="form-control" required>
+                        </div>
+                        <div>
+                            <label for="lieu_naissance">Lieu de naissance</label>
+                            <input type="text" id="lieu_naissance" name="lieu_naissance" class="form-control"
+                                placeholder="Ex: Conakry">
+                        </div>
+                        <div>
+                            <label for="sexe">Sexe <span class="required">*</span></label>
+                            <select id="sexe" name="sexe" class="form-control" required>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title mt-8">Scolarité</h3>
+
+                    <div class="form-group grid-2">
+                        <div>
+                            <label for="classe">Classe Demandée <span class="required">*</span></label>
+                            <select id="classe" name="classe" class="form-control" required>
+                                <option value="">-- Sélectionner --</option>
+                                {% for cl in classes %}
+                                <option value="{{ cl.id }}">{{ cl.nom }} ({{ cl.niveau_scolaire.nom }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="ecole_prec">École Précédente</label>
+                            <input type="text" id="ecole_prec" name="ecole_prec" class="form-control"
+                                placeholder="Nom de l'établissement...">
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title mt-8">Informations Tuteurs (Parent)</h3>
+
+                    <!-- Parent Link -->
+                    <div class="form-group mb-4 p-4 border rounded bg-blue-50" style="border-color: #93c5fd;">
+                        <p class="text-sm text-blue-800 mb-2 font-medium">Lier cet élève à un compte Parent existant ?
+                            (Optionnel)</p>
+                        <select name="parent" class="form-control max-w-sm">
+                            <option value="">-- Ne pas lier (Créer nouveau) --</option>
+                            {% for p in parents %}
+                            <option value="{{ p.id }}">{{ p.nom_complet }} ({{ p.telephone }})</option>
+                            {% endfor %}
+                        </select>
+                        <p class="text-xs text-blue-700 mt-2">Si sélectionné, le parent verra cet enfant dans son
+                            portail et l'étape d'envoi d'accès s'y appliquera.</p>
+                    </div>
+
+                    <div class="form-group grid-2">
+                        <div>
+                            <label for="nom_pere">Nom complet du Père / Tuteur 1 <span class="required">*</span></label>
+                            <input type="text" id="nom_pere" name="nom_pere" class="form-control" required>
+                        </div>
+                        <div>
+                            <label for="tel_pere">Téléphone Principal <span class="required">*</span></label>
+                            <input type="tel" id="tel_pere" name="tel_pere" class="form-control" required
+                                placeholder="+224 XX XX XX XX">
+                        </div>
+                    </div>
+                    <div class="form-group grid-2">
+                        <div>
+                            <label for="nom_mere">Nom complet de la Mère</label>
+                            <input type="text" id="nom_mere" name="nom_mere" class="form-control">
+                        </div>
+                        <div>
+                            <label for="tel_mere">Téléphone Secondaire (Mère)</label>
+                            <input type="tel" id="tel_mere" name="tel_mere" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-actions mt-8 border-t pt-6 text-right">
+                        <button type="button" class="btn btn-secondary mr-2">Annuler</button>
+                        <button type="submit" class="btn btn-primary text-white bg-orange">Enregistrer & Créer le
+                            Badge</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

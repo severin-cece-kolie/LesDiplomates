@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Paiement des Frais Scolaires — Les Diplomates{% endblock %}
+
+{% block content %}
+
+<div class="page-wrapper payment-page">
+
+    <nav class="breadcrumb">
+        <a href="{% url 'actualites:home' %}">Accueil</a>
+        <span>/</span>
+        <a href="#">Paiements</a>
+        <span>/</span>
+        <span>Paiement des Frais Scolaires</span>
+    </nav>
+
+    <div class="payment-header">
+        <h1>Paiement des Frais Scolaires</h1>
+        <p>Paiement sécurisé avec transparence financière en temps réel</p>
+    </div>
+
+    <div class="payment-layout">
+
+        <!-- PAYMENT METHOD -->
+        <div class="payment-form-card">
+            <h2>Choisir le Mode de Paiement</h2>
+
+            <div class="payment-methods">
+                <label class="method-option selected" id="method-orange">
+                    <input type="radio" name="payment_method" value="orange" checked>
+                    <div class="method-content">
+                        <span class="method-badge orange-badge">ORANGE</span>
+                        <span>Orange Money</span>
+                    </div>
+                    <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F97316"
+                        stroke-width="2">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </label>
+                <label class="method-option" id="method-mtn">
+                    <input type="radio" name="payment_method" value="mtn">
+                    <div class="method-content">
+                        <span class="method-badge mtn-badge">MTN</span>
+                        <span>MTN MoMo</span>
+                    </div>
+                </label>
+            </div>
+
+            <form method="POST" action="#" class="payment-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Numéro de Téléphone</label>
+                    <div class="phone-input-wrapper">
+                        <span class="phone-prefix">+224</span>
+                        <input type="tel" name="phone" placeholder="624 00 00 00" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Code d'Autorisation</label>
+                    <input type="text" name="auth_code" placeholder="Entrer le code à 6 chiffres" maxlength="6"
+                        required>
+                </div>
+
+                <div class="ussd-instruction">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <p>Composez <strong>*144#</strong>, choisissez 'Option 4' (Code d'autorisation), puis entrez votre
+                        code PIN secret pour recevoir votre code temporaire à 6 chiffres par SMS.</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-large">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Confirmer le Paiement
+                </button>
+            </form>
+        </div>
+
+        <!-- PAYMENT SUMMARY -->
+        <div class="payment-summary-card">
+            <h2>Récapitulatif du Paiement</h2>
+
+            <div class="summary-rows">
+                <div class="summary-row">
+                    <span>Nom de l'élève</span>
+                    <strong>Ibrahim Diallo</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Identifiant Élève</span>
+                    <strong>#GN-44291</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Mois</span>
+                    <strong>Octobre 2023</strong>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row">
+                    <span>Frais de Scolarité</span>
+                    <span>450,000 GNF</span>
+                </div>
+                <div class="summary-row">
+                    <span>Frais de Service</span>
+                    <span>2,500 GNF</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row total">
+                    <span>Montant Total</span>
+                    <strong class="total-amount">452,500 GNF</strong>
+                </div>
+            </div>
+
+            <div class="security-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                TRANSACTION CHIFFRÉE & SÉCURISÉE
+            </div>
+
+            <div class="help-text">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Besoin d'aide ? Contactez le bureau des finances au 123-456 ou via l'onglet support.
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-trust-badges">
+        <span class="trust-badge">PCI DSS</span>
+        <span class="trust-badge">SSL SÉCURISÉ</span>
+        <span class="trust-badge">AFRICA PAY</span>
+    </div>
+
+    <p class="payment-footer-text">© 2023 Portail Scolaire Les Diplomates. Toutes les transactions financières sont
+        surveillées pour la transparence et la sécurité.</p>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.method-option').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('.method-option').forEach(o => o.classList.remove('selected'));
+            option.classList.add('selected');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <h1>Vie Scolaire</h1>
+        <p>L'épanouissement au cœur de Les Diplomates.</p>
+    </div>
+</section>
+
+<section class="container py-10">
+    <div class="grid grid-2">
+        {% for section in sections %}
+        <div class="card p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="feature-icon orange-bg text-white">
+                    <span class="material-symbols-outlined">{{ section.icon }}</span>
+                </div>
+                <h3>{{ section.title }}</h3>
+            </div>
+            <p>{{ section.description }}</p>
+            {% if section.image %}<img src="{{ section.image.url }}" class="mt-4 rounded-lg">{% endif %}
+        </div>
+        {% empty %}
+        <div class="col-span-2 text-center py-12">
+            <p class="text-muted">Les informations sur la vie scolaire seront bientôt disponibles.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
